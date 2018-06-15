@@ -1,5 +1,5 @@
 
-#importFrom(utils, head, read.table, write.csv, write.table)
+#importFrom(utils, head, read.table, write.csv, write.table, dplyr, stringi)
 
 export(
   stopwords
