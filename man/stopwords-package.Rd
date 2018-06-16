@@ -1,9 +1,9 @@
 \name{stopwords-package}
 \alias{stopwords-package}
-\alias{stopwords}
+\alias{stopwoRds}
 \docType{package}
 \title{
-\packageTitle{stopwords}
+\packageTitle{stopwoRds}
 }
 \description{
 \packageDescription{stopwords}
