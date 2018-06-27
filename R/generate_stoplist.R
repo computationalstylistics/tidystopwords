@@ -32,31 +32,8 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
   stopifnot(require("dplyr"))
   source("list_supported_language_names.R")
   source("list_supported_language_ids.R")
-  multilingual_stoplist <- readr::read_csv(file = "DATA/multilingual_stoplist.csv", 
-                                           col_names = TRUE,
-                                           # col_names = c("language_id", "language_name", 
-                                           #               "POS", "UFeat", "lemma",
-                                           #               "word_form", 
-                                           #               "freq_formFeatPOS", 
-                                           #               "freq_formPOS", "freq_form", 
-                                           #               "prop_wformpos_wform"), 
-                                           trim_ws = TRUE
-                                           #, 
-                                           # col_types = list(language = col_character(),
-                                           #                  language_name = col_character(),
-                                           #                  POS = col_character(),
-                                           #                  UFeat = col_character(),
-                                           #                  lemma = col_character(),
-                                           #                  word_form = col_character(),
-                                           #                  freq_formUFeatPOS = col_integer(),
-                                           #                  freq_formPOS = col_integer(),
-                                           #                  freq_form = col_integer(),
-                                           #                  prop_wformpos_wform = col_double())
-#col specification was meant to prevent guessing messages from readr, but when they are on we get even error warnings. 
-#It's probably the rows with RTL languages that make this mess. Currently we get two messages with different
-#column types. One guess is all cols characters, the other is correct. 
-#We'll rather keep the two guessing messages only.                  
-  )                                           
+  multilingual_stoplist <- data(multilingual_stoplist)
+
 
 ##############
 # Control of user language selection by language name .
@@ -332,36 +309,6 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
   } else  {return(stoplist_vec)}
   
 }
-
-
-#####
-# generate_stoplist(#lang_name = c("Czech"),
-#                        #lang_id = "cs",
-#                        output_form = "data.frame",
-#                        custom_filter = 'lemma == "a"',
-#                        stop_foreign_words = FALSE,
-#                        #stop_forms = c("in"),
-#                        #stop_lemmas = c("kunna"),
-#                        stop_abbreviations = FALSE,
-#                        stop_numerals = FALSE,
-#                        stop_determiners_quantifiers = FALSE,
-#                        stop_conjuctions = FALSE,
-#                        stop_adpositions = FALSE,
-#                        stop_subordinating_conjunctions = FALSE,
-#                        stop_auxiliary_verbs = FALSE,
-#                        stop_particles = FALSE,
-#                        stop_interjections = FALSE,
-#                        stop_pronominals = FALSE,
-#                        stop_punctuation_crosslingual = FALSE,
-#                        stop_symbols_crosslingual = FALSE
-#                        )
-# 
-# 
-# 
-
-
-
-
 
 
 

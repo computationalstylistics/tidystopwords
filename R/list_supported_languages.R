@@ -1,5 +1,5 @@
 list_supported_languages <- function() {
-  multilingual_stoplist <- read.csv("DATA/multilingual_stoplist.csv")
-  supported_languages <- unique(multilingual_stoplist$language) %>% levels()
+  multilingual_stoplist <- data(multilingual_stoplist)
+  supported_languages <- unique(multilingual_stoplist$language_id)
   return(supported_languages)
 }

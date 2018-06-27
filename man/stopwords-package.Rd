@@ -1,19 +1,19 @@
 \name{stopwoRds}
-\alias{stopwords-package}
+\alias{stopwoRds-package}
 \alias{stopwoRds}
 \docType{package}
 \title{
-\packageTitle{stopwoRds}
+stopwoRds
 }
 \description{
-\packageDescription{stopwords}
+\packageDescription{stopwoRds}
 
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{stopwords}
-\packageIndices{stopwords}
+\packageDESCRIPTION{stopwoRds}
+\packageIndices{stopwoRds}
 The idea behind this package is to give the user control over the stop-word 
 selection. The core \code{generate_stoplist} function relies on 
 \code{multilingual_stopwords}, a large data frame derived from the current 
@@ -25,16 +25,13 @@ The data comes encoded in UTF-8.
 ~~ functions ~~
 }
 \author{
-\packageAuthor{stopwords}
-
-Maintainer: \packageMaintainer{stopwords}
+ABC
 }
 \references{
-~~ Literature or other references for background information ~~
+XYZ
 }
 ~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
 ~~ the R documentation directory ~~
-\keyword{ package }
 \seealso{
 ~~ Optional links to other man pages, e.g. ~~
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~

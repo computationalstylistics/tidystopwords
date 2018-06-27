@@ -1,5 +1,14 @@
 #importFrom(utils, head, read.table, write.csv, write.table, dplyr, stringi)
 
+import(
+  dplyr
+)
+
+
 export(
-  stopwords
+  generate_stoplist,
+  list_supported_languages,
+  list_supported_pos,
+  list_supported_language_ids,
+  list_supported_language_names
 )

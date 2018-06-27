@@ -16,10 +16,7 @@ Listing of parts of speech to include in stopword lists you generate by  \code{g
 The function gives you a character vector of supported parts of speech (e.g. prepositions). They are represented by abbreviations.
 }
 \usage{
-> list_supported_pos()
-[[1] "ADJ"   "ADP"   "ADV"   "AUX"   "CCONJ" 
-"DET"   "INTJ"  "NOUN"  "NUM"  
-[10] "PART"  "PRON"  "PROPN" "PUNCT" "SCONJ" "SYM"   "VERB"
+list_supported_pos()
 }
 %- maybe also 'usage' for other objects documented here.
 \details{
@@ -64,8 +61,6 @@ Silvie Cinkova, Maciej Eder
 \code{\link{list_supported_language_names}}, \code{\link{list_supported_language_ids}}, \code{\link{generate_stoplist}}, \code{\link{multilingual_stoplist}} 
 }
 \examples{
-\code{## list_supported_pos()}
-
-\code{## [[1] "ADJ"   "ADP"   "ADV"   "AUX"   "CCONJ" "DET"   "INTJ"  "NOUN"  "NUM"  
-[10] "PART"  "PRON"  "PROPN" "PUNCT" "SCONJ" "SYM"   "VERB"
+list_supported_pos()
+}
 
