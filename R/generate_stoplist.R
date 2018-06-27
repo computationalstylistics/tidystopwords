@@ -26,19 +26,19 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
                               custom_filter = NULL
                               
                               )  {
-    if (require("dplyr") == FALSE) {
-    library(dplyr)
-  }
-  stopifnot(require("dplyr"))
-  source("list_supported_language_names.R")
-  source("list_supported_language_ids.R")
-  multilingual_stoplist <- data(multilingual_stoplist)
+#    if (require("dplyr") == FALSE) {
+#    library(dplyr)
+#  }
+#  stopifnot(require("dplyr"))
+#  source("list_supported_language_names.R")
+#  source("list_supported_language_ids.R")
+  data(multilingual_stoplist)
 
 
 ##############
-# Control of user language selection by language name .
+# Control of user language selection by language name.
 
-#the vector of language names is to be updated manually with every new version of the multilingual_stoplist.csv file
+# the vector of language names is to be updated manually with every new version of the multilingual_stoplist.csv file
  if (!isTRUE(all.equal(lang_name, c("Afrikaans", "Ancient_Greek", "Arabic", "Basque","Bulgarian", "Buryat", "Catalan", 
                                    "Chinese", "Coptic", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian", 
                                    "Finnish", "French", "Galician", "German", "Gothic", "Greek", "Hebrew", "Hindi", 
@@ -116,7 +116,7 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
   
   # Each linguistic filter will filter rows from multilingual_stoplist into a subdataframe. 
   # A new empty dataframe (called stoplist) will rowbind subdataframes step by step. 
-  # The final stoplist will be generated from wordforms of the stoplist data frame after all . 
+  # The final stoplist will be generated from wordforms of the stoplist data frame after all. 
   stoplist_db <- matrix(nrow = 0, ncol = ncol(multilingual_stoplist)) %>% as.data.frame(stringsAsFactors = FALSE) 
   colnames(stoplist_db) = colnames(multilingual_stoplist)
  
