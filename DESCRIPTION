@@ -1,18 +1,11 @@
 Package: stopwoRds
 Type: Package
 Title: A Selection of Stopwords in Different Languages
-<<<<<<< HEAD
 Version: 0.0.2
-=======
-Version: 0.0.1
->>>>>>> 5ead87be4651c5a03e35d3aecade6ba7745f751a
 Date: 2018-04-19
 Author: Silvie Cinkova, Maciej Eder
 Maintainer: Maciej Eder <maciejeder@gmail.com>
 Depends: R (>= 2.14)
 Description: The package contains functions [generate_stoplist(), list_supported_languages(), list_supported_pos]
 License: GPL (>= 3)
-<<<<<<< HEAD
-=======
 Encoding: UTF-8
->>>>>>> 5ead87be4651c5a03e35d3aecade6ba7745f751a

@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-
 #importFrom(utils, head, read.table, write.csv, write.table, dplyr, stringi)
 
 export(
   stopwords
 )
-=======
-
-#importFrom(utils, head, read.table, write.csv, write.table, dplyr, stringi)
-
-export(
-  stopwords
-)
->>>>>>> 5ead87be4651c5a03e35d3aecade6ba7745f751a
