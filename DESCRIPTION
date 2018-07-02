@@ -10,5 +10,4 @@ Imports: dplyr
 Description: The package contains functions [generate_stoplist(), list_supported_languages(), list_supported_pos]
 License: GPL (>= 3)
 Encoding: UTF-8
-# Silvie trying to make the package read in the data
 LazyData: TRUE
