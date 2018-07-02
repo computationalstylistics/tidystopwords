@@ -11,5 +11,5 @@ export(
   list_supported_pos,
   list_supported_language_ids,
   list_supported_language_names
-  ../DATA/multilingual_stoplist
+ # ../DATA/multilingual_stoplist
 )
