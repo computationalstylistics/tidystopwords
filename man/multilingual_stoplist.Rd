@@ -4,6 +4,7 @@
 \docType{data}
 \title{
 %%   ~~ data name/kind ... ~~
+Multilingual stoplist
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of the dataset. ~~
