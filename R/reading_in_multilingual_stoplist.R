@@ -1,1 +1,1 @@
-load(file = "multilingual_stoplist.rda")
+load(file = "..DATA/multilingual_stoplist.rda")
