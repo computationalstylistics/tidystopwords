@@ -7,7 +7,6 @@ import(
 
 export(
   generate_stoplist,
-  list_supported_languages,
   list_supported_pos,
   list_supported_language_ids,
   list_supported_language_names

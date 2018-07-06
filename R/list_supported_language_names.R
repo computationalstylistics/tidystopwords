@@ -1,5 +1,5 @@
 list_supported_language_names <- function() {
-    data(multilingual_stoplist)
+    load("sysdata.rda")
     supported_languages <- unique(multilingual_stoplist$language_name)
     return(supported_languages)
 }
