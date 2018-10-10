@@ -14,7 +14,7 @@ to toggle different parts of speech as well as to add new words.
 
 }
 \usage{
-\code{function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", #
+generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", #
                              "Basque","Bulgarian", "Buryat", "Catalan", #
                              "Chinese", "Coptic", "Croatian", "Czech",#
                              "Danish", "Dutch", "English", "Estonian",#
@@ -156,9 +156,9 @@ Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.n
 %%  ~~who you are~~
 Silvie Cinková, Maciej Eder
 }
-\note{
+%\note{
 %%  ~~further notes~~
-}
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \section{Warning}{
@@ -182,8 +182,8 @@ Many languages are represented by balanced and large corpora of standard written
 \code{\link{list_supported_language_names}}, \code{\link{list_supported_language_ids}}, \code{\link{list_supported_pos}}, \code{\link{multilingual_stoplist}}}
 
 \examples{
-\code{## sample(generate_stoplist(lang_name = "English"), 20)}
-\code{[1] "a"     "24"    "an"    "c:"    "《"    "into"  "b"    
+\dontrun{## sample(generate_stoplist(lang_name = "English"), 20)}
+\dontrun{[1] "a"     "24"    "an"    "c:"    "《"    "into"  "b"    
 [8] "**"    "x"     "'1"    "us$"   "whom"  "!"     "；"   
 [15] "you"   "£"     "whose" "・"    "(4)"   "three"}
 
@@ -203,12 +203,12 @@ Many languages are represented by balanced and large corpora of standard written
                           stop_symbols_crosslingual = FALSE,
                           stop_punctuation_crosslingual = FALSE,
                           custom_filter = NULL)}
-\code{ 
+\dontrun{ 
  [1] "&"       "and"     "both"    "but"    
  [5] "either"  "neither" "nor"     "not"    
  [9] "or"      "plus"    "yet" }
 
-\code{##
+\dontrun{##
 generate_stoplist(lang_name = "English",          ## LOOK HERE
                   stop_foreign_words = FALSE, 
                    stop_abbreviations = FALSE,
@@ -228,13 +228,13 @@ generate_stoplist(lang_name = "English",          ## LOOK HERE
                    # NB real column names of the data set, not argument names
                    # in the filter!!
                    )}
-\code{##
+\dontrun{##
 [1] "aber"     "als"      "and"      "denn"    
  [5] "doch"     "entweder" "jedoch"   "noch"    
  [9] "oder"     "sondern"  "sowie"    "sowohl"  
 [13] "und"      "weder"    "wie" }
 
-\code{##
+\dontrun{##
 generate_stoplist(lang_name = "Japanese", lang_id = "cs", stop_foreign_words = FALSE, 
                    stop_abbreviations = FALSE,
                    stop_pronominals = FALSE,
@@ -250,7 +250,7 @@ generate_stoplist(lang_name = "Japanese", lang_id = "cs", stop_foreign_words = F
                    stop_punctuation_crosslingual = FALSE,
                    custom_filter = "language_name == 'German' & POS == 'CCONJ'"
                    )}
-\code{##
+\dontrun{##
 [1] "aber"     "als"      "and"      "denn"    
  [5] "doch"     "entweder" "jedoch"   "noch"    
  [9] "oder"     "sondern"  "sowie"    "sowohl"  
@@ -259,9 +259,9 @@ Warning message:
 HEADS UP! Language selection by_name as well as by lang_id. 
  You may want to check your selection.}
 
-\code{##
+\dontrun{##
 generate_stoplist(lang_name = c("english", "Russian", "Klingon", "Esperanto"))}
-\code{##
+\dontrun{##
 [1] "english"   "Klingon"   "Esperanto"
 Error: Remove the item(s) listed above from lang_name. 
  To check out the supported languages, call `list_supported_language_names()`.
