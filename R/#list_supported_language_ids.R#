@@ -1,5 +1,7 @@
 list_supported_language_ids <- function() {
+    # a hack to silence package warnings
     multilingual_stoplist = NULL
+    # 
     data(multilingual_stoplist)
     supported_languages <- unique(multilingual_stoplist$language_id)
     return(supported_languages)
