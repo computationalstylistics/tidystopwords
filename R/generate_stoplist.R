@@ -32,7 +32,11 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
 #  stopifnot(require("dplyr"))
 #  source("list_supported_language_names.R")
 #  source("list_supported_language_ids.R")
-  load("sysdata.rda")
+#  load("sysdata.rda")
+
+data(multilingual_stoplist)
+
+
 
 
 ##############
