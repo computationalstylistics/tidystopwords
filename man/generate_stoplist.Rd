@@ -45,7 +45,7 @@ generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", #
                              stop_numerals = TRUE,
                              stop_symbols_crosslingual = TRUE,
                              stop_punctuation_crosslingual = TRUE,
-                             custom_filter = NULL )}}
+                             custom_filter = NULL )}
 %- maybe also 'usage' for other objects documented here.
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -187,7 +187,7 @@ Many languages are represented by balanced and large corpora of standard written
 [8] "**"    "x"     "'1"    "us$"   "whom"  "!"     "；"   
 [15] "you"   "£"     "whose" "・"    "(4)"   "three"}
 
-\code{## generate_stoplist(lang_name = "English", 
+\dontrun{## generate_stoplist(lang_name = "English", 
                           #default NULL in lang_id, stop_lemmas, stop_forms 
                           stop_foreign_words = FALSE, 
                           stop_abbreviations = FALSE,

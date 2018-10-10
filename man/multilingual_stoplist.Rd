@@ -8,6 +8,7 @@ Multilingual stoplist
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of the dataset. ~~
+This dataset contains a dataframe with individual word forms in rows. Each row has the following columns: language\_id, language\_name, POS, UFeat, lemma, word\_form, freq\_formUFeatPOS, freq\_formPOS, freq\_form, prop_\wformpos\_wform. You can control the part of speech and various frequency counts of your desired stop-word list.
 }
 \usage{data("multilingual_stoplist")}
 \format{
