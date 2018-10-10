@@ -1,120 +1,101 @@
 \encoding{utf8}
 \name{generate_stoplist}
 \alias{generate_stoplist}
-%- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
-%%  ~~function to do ... ~~
-Listing of stop words with control over language and part of speech
+Listing of stop words with control over language and part of speech.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 Generate a vector of stop words in one or several languages. Parameters allow you 
 to toggle different parts of speech as well as to add new words.
 
 }
 \usage{
-generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", #
-                             "Basque","Bulgarian", "Buryat", "Catalan", #
-                             "Chinese", "Coptic", "Croatian", "Czech",#
-                             "Danish", "Dutch", "English", "Estonian",#
-                             "Finnish", "French", "Galician", "German",#
-                             "Gothic", "Greek", "Hebrew", "Hindi",#
-                             "Hungarian", "Indonesian", "Irish", "Italian",#
-                             "Japanese", "Kazakh", "Korean", "Kurmanji", #
-                             "Latin", "Latvian", "North_Sami", "Norwegian",# 
-                             "Old_Church_Slavonic", "Persian", "Polish",#
-                             "Portuguese", "Romanian", "Russian", "Serbian",#
-                             "Slovak", "Slovenian", "Spanish", "Swedish",#
-                             "Tamil", "Turkish", "Ukrainian", "Upper_Sorbian",#
-                             "Urdu", "Uyghur", "Vietnamese"), 
-                             lang_id = NULL,
-                             output_form = "vector", #option: "data.frame"
-                             stop_lemmas = NULL,
-                             stop_forms = NULL,
-                             stop_foreign_words = TRUE, 
-                             stop_abbreviations = TRUE,
-                             stop_pronominals = TRUE,
-                             stop_determiners_quantifiers = TRUE,
-                             stop_conjuctions = TRUE, 
-                             stop_adpositions = TRUE,
-                             stop_subordinating_conjunctions = TRUE,
-                             stop_auxiliary_verbs = TRUE,
-                             stop_interjections = TRUE,
-                             stop_particles = TRUE,
-                             stop_numerals = TRUE,
-                             stop_symbols_crosslingual = TRUE,
-                             stop_punctuation_crosslingual = TRUE,
-<<<<<<< HEAD
-                             custom_filter = NULL )}
-=======
-                             custom_filter = NULL )
+generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic",
+                         "Basque","Bulgarian", "Buryat", "Catalan",
+                         "Chinese", "Coptic", "Croatian", "Czech",
+                         "Danish", "Dutch", "English", "Estonian",
+                         "Finnish", "French", "Galician", "German",
+                         "Gothic", "Greek", "Hebrew", "Hindi",
+                         "Hungarian", "Indonesian", "Irish", "Italian",
+                         "Japanese", "Kazakh", "Korean", "Kurmanji",
+                         "Latin", "Latvian", "North_Sami", "Norwegian",
+                         "Old_Church_Slavonic", "Persian", "Polish",
+                         "Portuguese", "Romanian", "Russian", "Serbian",
+                         "Slovak", "Slovenian", "Spanish", "Swedish",
+                         "Tamil", "Turkish", "Ukrainian", "Upper_Sorbian",
+                         "Urdu", "Uyghur", "Vietnamese"), 
+                  lang_id = NULL,
+                  output_form = "vector",
+                  stop_lemmas = NULL,
+                  stop_forms = NULL,
+                  stop_foreign_words = TRUE, 
+                  stop_abbreviations = TRUE,
+                  stop_pronominals = TRUE,
+                  stop_determiners_quantifiers = TRUE,
+                  stop_conjuctions = TRUE, 
+                  stop_adpositions = TRUE,
+                  stop_subordinating_conjunctions = TRUE,
+                  stop_auxiliary_verbs = TRUE,
+                  stop_interjections = TRUE,
+                  stop_particles = TRUE,
+                  stop_numerals = TRUE,
+                  stop_symbols_crosslingual = TRUE,
+                  stop_punctuation_crosslingual = TRUE,
+                  custom_filter = NULL )
 }
->>>>>>> 109fc4daf5ef404f1c97f3df2dd673a8873e9ab0
-%- maybe also 'usage' for other objects documented here.
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-\code{lang_name} -- single string or a character vector. A vector of some languages by default. 
 
-\code{lang_id} -- a single string or a character vector. 
-Call \code{list_supported_language_ids()} to see the supported ISO-639 language codes, if
-you prefer these codes to language names. Mind to set the \code{lang_name} 
-argument to \code{NULL}, if you do so. 
+\arguments{
+\item{lang_name}{single string or a character vector. A vector of some languages by default.}
 
-\code{output_form} -- default \code{"vector"}, alternatively \code{"data.frame"}
+\item{lang_id}{a single string or a character vector. Call \code{list_supported_language_ids()} to see the supported ISO-639 language codes, if you prefer these codes to language names. Mind to set the \code{lang_name} argument to \code{NULL}, if you do so.}
 
-\code{stop_lemmas} -- default \code{NULL}. Supply a string or a character vector. 
-You get all word forms of each listed lemma found in the data set for your 
-selected language(s). POS disambiguation is not possible with this argument: 
-mind homonyms.
+\item{output_form}{default \code{"vector"}, alternatively \code{"data.frame"}.}
 
-\code{stop_forms} -- default \code{NULL}. Supply a string or a character vector. 
-You get all word forms present in the data set for your selected language(s). 
-POS disambiguation is not possible with this argument: mind homonyms.
+\item{stop_lemmas}{default \code{NULL}. Supply a string or a character vector. You get all word forms of each listed lemma found in the data set for your selected language(s). POS disambiguation is not possible with this argument: mind homonyms.}
 
-The following parameters extract word forms from the data set with the relevant 
-linguistic markup for your selected languages(s). It is often a combination of 
-the coarse-grained universal POS tag and a set of so-called Universal Features. 
-The same set of filters are used across all languages. 
+\item{stop_forms}{default \code{NULL}. Supply a string or a character vector. You get all word forms present in the data set for your selected language(s). POS disambiguation is not possible with this argument: mind homonyms. 
+    
+The following parameters extract word forms from the data set with the relevant  linguistic markup for your selected languages(s). It is often a combination of the coarse-grained universal POS tag and a set of so-called Universal Features. The same set of filters are used across all languages.}
 
-\code{stop_foreign_words} -- default \code{TRUE}. 
+\item{stop_foreign_words}{default \code{TRUE}.}
 
-\code{stop_abbreviations} -- default \code{TRUE}.
+\item{stop_abbreviations}{default \code{TRUE}.}
 
-\code{stop_pronominals} -- default \code{TRUE}. All pronouns (e.g. "me", "this",
-"what") along with pronominal adjectives and adverbs (e.g. "whose", "where").
+\item{stop_pronominals}{default \code{TRUE}. All pronouns (e.g. "me", "this",
+"what") along with pronominal adjectives and adverbs (e.g. "whose", "where").}
 
-\code{stop_determiners_quantifiers} -- default \code{TRUE}. Articles, 
-possessive pronouns, quantifiers (e.g. "all", "few", "both").
+\item{stop_determiners_quantifiers}{default \code{TRUE}. Articles, 
+possessive pronouns, quantifiers (e.g. "all", "few", "both").}
 
-\code{stop_conjuctions} -- default \code{TRUE}. Coordinating conjunctions; e.g. 
-"and", "but". 
+\item{stop_conjuctions}{default \code{TRUE}. Coordinating conjunctions; e.g. 
+"and", "but".}
 
-\code{stop_adpositions} -- default \code{TRUE}. Prepositions and postpositions; 
-e.g. "of", "instead", "ago".
+\item{stop_adpositions}{default \code{TRUE}. Prepositions and postpositions; 
+e.g. "of", "instead", "ago".}
 
-\code{stop_subordinating_conjunctions} -- default \code{TRUE}. E.g. "because".
+\item{stop_subordinating_conjunctions}{default \code{TRUE}. E.g. "because".}
 
-\code{stop_auxiliary_verbs} -- default \code{TRUE}. E.g. "have", "be". 
+\item{stop_auxiliary_verbs}{default \code{TRUE}. E.g. "have", "be". 
 Many languages mark also modal verbs ("must", "can") as auxiliary verbs, 
 but some (e.g. Czech) do not. Check the UD documentation for your language
 of interest. Also, mind that when adding e.g. "have" to your stop-word vector, 
-you are also going to get rid of all its lexical uses; e.g. in "I have two cars." 
+you are also going to get rid of all its lexical uses; e.g. in "I have two cars."}
                              
-\code{stop_interjections} -- default \code{TRUE}. Exclamatory words; e.g. "wow",
-"ouch", but also "yes". Here the individual languages differ very much. 
+\item{stop_interjections}{default \code{TRUE}. Exclamatory words; e.g. "wow",
+"ouch", but also "yes". Here the individual languages differ very much.}
 
-\code{stop_particles} -- default \code{TRUE}. Also a very heterogeneous class. 
+\item{stop_particles}{default \code{TRUE}. Also a very heterogeneous class. 
 Check what is in there for your language of interest. NB: the English particles 
-in phrasal verbs are regarded as adpositions, not as particles. 
+in phrasal verbs are regarded as adpositions, not as particles.} 
 
-\code{stop_numerals} -- default \code{TRUE}. Words denoting numbers: cardinal and ordinal numerals, as well as words that many languages normally regard as adjectives or adverbs; e.g. "double", "fourfold".
+\item{stop_numerals}{default \code{TRUE}. Words denoting numbers: cardinal and ordinal numerals, as well as words that many languages normally regard as adjectives or adverbs; e.g. "double", "fourfold".}
 
-\code{stop_symbols_crosslingual} -- default \code{TRUE}. All symbols (e.g. emoji or currencies) harvested across all languages. 
+\item{stop_symbols_crosslingual}{default \code{TRUE}. All symbols (e.g. emoji or currencies) harvested across all languages.}
 
-\code{stop_punctuation_crosslingual} -- default \code{TRUE}. All punctuation marks harvested across all languages.
+\item{stop_punctuation_crosslingual}{default \code{TRUE}. All punctuation marks harvested across all languages.}
 
-\code{custom_filter} -- default \code{NULL}. If you are not happy with the 
+\item{custom_filter}{default \code{NULL}. If you are not happy with the 
 predefined stopword specifications, you can write your own filter for the 
 underlying data set. Insert an evaluating expression in quotes. It will be 
 parsed in \code{dplyr::filter(multilingual_stoplist,} your expression\code{)}. 
@@ -122,9 +103,11 @@ If you want to use the full power of \code{dplyr}, e.g. grouping, use
 the \code{multilingual_stoplist} data set on its own. 
 This argument works independently of the pre-defined filters. 
 Mind to turn them off if you do not want them. This filter also helps you 
-override the pre-defined language choice, should you wish to.
+override the pre-defined language choice, should you wish to.}
+}
 
 
+%\details{
 %The data frame has the following columns:
 %\enumerate{
 %\item \code{word_form}: word forms as they are. 
@@ -137,15 +120,12 @@ override the pre-defined language choice, should you wish to.
 %\item \code{freq_formPOS}: frequencies of each word form in a given language across all corpora, no matter its POS tag. Here, the frequency of "her" would be the sum of its frequencies as a personal pronoun and as a possessive pronoun. 
 %}
 %}
-}
+%}
+
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-a character vector, UTF-8 encoded.
+A character vector, UTF-8 encoded.
 }
+
 \references{
 The data set is based on the official release of Version 2.1 of Universal Dependencies.
 
@@ -155,17 +135,13 @@ Nivre, Joakim; Agić, Željko; Ahrenberg, Lars; et al., 2017,
 Universal Dependencies 2.1, LINDAT/CLARIN digital library 
 at the Institute of Formal and Applied Linguistics (ÚFAL), 
 Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.net/11234/1-2515}.  
-%% ~put references to the literature/web site here ~
 }
+
 \author{
-%%  ~~who you are~~
 Silvie Cinková, Maciej Eder
 }
-%\note{
-%%  ~~further notes~~
-%}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 \section{Warning}{
 \itemize{
 \item{The function stops when both \code{lang_name} and \code{lang_id} equal \code{NULL}. Setting a language in the custom filter does not do.}
@@ -179,21 +155,20 @@ language inventory relies on the underlying data frame. The initial checks call 
 Many languages are represented by balanced and large corpora of standard written texts, but some are not; e.g. based mainly on a Bible translation. Hence also their stopwords can be biased. }
 }
 }
-%}
-%}
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link{list_supported_language_names}}, \code{\link{list_supported_language_ids}}, \code{\link{list_supported_pos}}, \code{\link{multilingual_stoplist}}}
+\code{\link{list_supported_language_names}}, \code{\link{list_supported_language_ids}}, \code{\link{list_supported_pos}}, \code{\link{multilingual_stoplist}}
+}
 
 \examples{
-\dontrun{## sample(generate_stoplist(lang_name = "English"), 20)}
-\dontrun{[1] "a"     "24"    "an"    "c:"    "《"    "into"  "b"    
-[8] "**"    "x"     "'1"    "us$"   "whom"  "!"     "；"   
-[15] "you"   "£"     "whose" "・"    "(4)"   "three"}
 
-\dontrun{## generate_stoplist(lang_name = "English", 
-                          #default NULL in lang_id, stop_lemmas, stop_forms 
+    # standard usage:
+    generate_stoplist(lang_name = "English")
+    
+    
+    # to get only conjunctions (11 items):
+    generate_stoplist(lang_name = "English", 
                           stop_foreign_words = FALSE, 
                           stop_abbreviations = FALSE,
                           stop_pronominals = FALSE,
@@ -206,75 +181,6 @@ Many languages are represented by balanced and large corpora of standard written
                           stop_particles = FALSE,
                           stop_numerals = FALSE,
                           stop_symbols_crosslingual = FALSE,
-                          stop_punctuation_crosslingual = FALSE,
-                          custom_filter = NULL)}
-\dontrun{ 
- [1] "&"       "and"     "both"    "but"    
- [5] "either"  "neither" "nor"     "not"    
- [9] "or"      "plus"    "yet" }
+                          stop_punctuation_crosslingual = FALSE)
 
-\dontrun{##
-generate_stoplist(lang_name = "English",          ## LOOK HERE
-                  stop_foreign_words = FALSE, 
-                   stop_abbreviations = FALSE,
-                   stop_pronominals = FALSE,
-                   stop_determiners_quantifiers = FALSE,
-                   stop_conjuctions = FALSE, 
-                   stop_adpositions = FALSE,
-                   stop_subordinating_conjunctions = FALSE,
-                   stop_auxiliary_verbs = FALSE,
-                   stop_interjections = FALSE,
-                   stop_particles = FALSE,
-                   stop_numerals = FALSE,
-                   stop_symbols_crosslingual = FALSE,
-                   stop_punctuation_crosslingual = FALSE,
-                   custom_filter = "language_name == 'German' & POS == 'CCONJ'"
-                   # filter overrides the lang_name argument
-                   # NB real column names of the data set, not argument names
-                   # in the filter!!
-                   )}
-\dontrun{##
-[1] "aber"     "als"      "and"      "denn"    
- [5] "doch"     "entweder" "jedoch"   "noch"    
- [9] "oder"     "sondern"  "sowie"    "sowohl"  
-[13] "und"      "weder"    "wie" }
-
-\dontrun{##
-generate_stoplist(lang_name = "Japanese", lang_id = "cs", stop_foreign_words = FALSE, 
-                   stop_abbreviations = FALSE,
-                   stop_pronominals = FALSE,
-                   stop_determiners_quantifiers = FALSE,
-                   stop_conjuctions = FALSE, 
-                   stop_adpositions = FALSE,
-                   stop_subordinating_conjunctions = FALSE,
-                   stop_auxiliary_verbs = FALSE,
-                   stop_interjections = FALSE,
-                   stop_particles = FALSE,
-                   stop_numerals = FALSE,
-                   stop_symbols_crosslingual = FALSE,
-                   stop_punctuation_crosslingual = FALSE,
-                   custom_filter = "language_name == 'German' & POS == 'CCONJ'"
-                   )}
-\dontrun{##
-[1] "aber"     "als"      "and"      "denn"    
- [5] "doch"     "entweder" "jedoch"   "noch"    
- [9] "oder"     "sondern"  "sowie"    "sowohl"  
-[13] "und"      "weder"    "wie" 
-Warning message:
-HEADS UP! Language selection by_name as well as by lang_id. 
- You may want to check your selection.}
-
-\dontrun{##
-generate_stoplist(lang_name = c("english", "Russian", "Klingon", "Esperanto"))}
-\dontrun{##
-[1] "english"   "Klingon"   "Esperanto"
-Error: Remove the item(s) listed above from lang_name. 
- To check out the supported languages, call `list_supported_language_names()`.
-Called from: generate_stoplist(lang_name = c("english", "Russian", "Klingon", 
-    "Esperanto"))} }
- 
-
- 
- 
- 
- 
+}

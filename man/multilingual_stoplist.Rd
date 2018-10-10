@@ -2,15 +2,19 @@
 \name{multilingual_stoplist}
 \alias{multilingual_stoplist}
 \docType{data}
+
 \title{
-%%   ~~ data name/kind ... ~~
 Multilingual stoplist
 }
+
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
-This dataset contains a dataframe with individual word forms in rows. Each row has the following columns: language\_id, language\_name, POS, UFeat, lemma, word\_form, freq\_formUFeatPOS, freq\_formPOS, freq\_form, prop_\wformpos\_wform. You can control the part of speech and various frequency counts of your desired stop-word list.
+This dataset contains a dataframe with individual word forms in rows. You can control the part of speech and various frequency counts of your desired stop-word list.
 }
-\usage{data("multilingual_stoplist")}
+
+\usage{
+data("multilingual_stoplist")
+}
+
 \format{
   A data frame with 213,526 observations on the following 10 variables, encoded in UTF-8.
   \describe{
@@ -23,11 +27,10 @@ This dataset contains a dataframe with individual word forms in rows. Each row h
     \item{\code{freq_formUFeatPOS}}{an integer vector}
     \item{\code{freq_formPOS}}{an integer vector}
     \item{\code{freq_form}}{an integer vector}
-    \item{\code{prop_wforpos_wform}}{an integer vector}
+    \item{\code{prop_wformpos_wform}}{an integer vector}
   }
 }
 \details{
-%%  ~~ If necessary, more details than the __description__ above ~~
 This data frame has been derived from an official release of the Universal Dependencies (UD) treebanks. 
 Treebanks are text corpora with linguistic annotation. The UD syntactic annotation follows principles of dependency syntax.
 The annotation encompasses for each text token:
@@ -64,11 +67,10 @@ The morphological categories in UD are divided into two groups: the coarse-grain
 \source{
 The data set is based on the official release of Version 2.1 of Universal Dependencies stored in the LINDAT/CLARIN digital library 
 at the Institute of Formal and Applied Linguistics (ÚFAL), Faculty of Mathematics and Physics, Charles University, Czech Republic, \url{http://hdl.handle.net/11234/1-2515}. 
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
 }
+
 \references{
 To perform more sophisticated searches in this data frame, check the UD documentation. We have included all parts of speech except \code{X} (unknown POS). You can e.g. add to your stoplist all nouns above or below a given frequency threshold. 
-%%  ~~ possibly secondary sources and usages ~~
 \url{http://universaldependencies.org}
 
 Nivre, Joakim; Agić, Željko; Ahrenberg, Lars; et al., 2017, 
@@ -76,9 +78,12 @@ Universal Dependencies 2.1, LINDAT/CLARIN digital library
 at the Institute of Formal and Applied Linguistics (ÚFAL), 
 Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.net/11234/1-2515}. 
 }
+
 \examples{
 data(multilingual_stoplist)
-## maybe str(multilingual_stoplist) ; plot(multilingual_stoplist) ...
+
+print(multilingual_stoplist)
+
 \dontrun{
 Observations: 213,526Variables: 10
 $ language_id         <chr> "af", "af", "af", "af", "af", "af", "af...

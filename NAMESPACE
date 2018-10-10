@@ -1,8 +1,5 @@
-#importFrom(utils, head, read.table, write.csv, write.table, dplyr, stringi)
 
-import(
-  dplyr
-)
+import(dplyr)
 
 importFrom(utils, data)
 
