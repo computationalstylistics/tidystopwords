@@ -16,6 +16,9 @@ Listing of languages to include in stopword lists you generate by \code{generate
 The function gives you a character vector of supported language names, e.g. "English".
 }
 \usage{
+<<<<<<< HEAD
+list_supported_language_names()
+=======
 \dontrun{## list_supported_language_names()}
 
 \dontrun{## 
@@ -38,8 +41,10 @@ The function gives you a character vector of supported language names, e.g. "Eng
 [49] "Ukrainian"           "Upper_Sorbian"       "Urdu"               
 [52] "Uyghur"              "Vietnamese"       
 }
+>>>>>>> 109fc4daf5ef404f1c97f3df2dd673a8873e9ab0
 }
-%- maybe also 'usage' for other objects documented here.
+
+
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 The \code{stopwoRds} package relies on \code{multilingual_stoplist}, a large multilingual table with individual word forms as rows, derived from the Universal Dependencies treebanks. 

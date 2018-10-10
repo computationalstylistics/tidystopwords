@@ -6,7 +6,11 @@ Date: 2018-10-10
 Author: Silvie Cinkova, Maciej Eder
 Maintainer: Maciej Eder <maciejeder@gmail.com>
 Depends: R (>= 2.14)
+<<<<<<< HEAD
+Imports: dplyr
+=======
 Imports: dplyr, stringr
+>>>>>>> 109fc4daf5ef404f1c97f3df2dd673a8873e9ab0
 Description: The package contains functions [generate_stoplist(), list_supported_languages(), list_supported_pos].
 License: GPL (>= 3)
 Encoding: UTF-8
