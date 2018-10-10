@@ -16,9 +16,9 @@ Listing of languages to include in stopword lists you generate by \code{generate
 The function gives you a character vector of supported language names, e.g. "English".
 }
 \usage{
-\code{## list_supported_language_names()}
+\dontrun{## list_supported_language_names()}
 
-\code{## 
+\dontrun{## 
  [1] "Afrikaans"           "Ancient_Greek"       "Arabic"             
  [4] "Basque"              "Bulgarian"           "Buryat"             
  [7] "Catalan"             "Coptic"              "Croatian"           
@@ -67,9 +67,7 @@ Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.n
 %%  ~~who you are~~
 Silvie Cinková, Maciej Eder
 }
-\note{
-%%  ~~further notes~~
-}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -78,9 +76,9 @@ Silvie Cinková, Maciej Eder
 \code{\link{list_supported_pos}}, \code{\link{list_supported_language_ids}}, \code{\link{generate_stoplist}}, \code{\link{multilingual_stoplist}} 
 }
 \examples{
-\code{## list_supported_language_names()}
+\dontrun{## list_supported_language_names()}
 
-\code{## 
+\dontrun{## 
  [1] "Afrikaans"           "Ancient_Greek"       "Arabic"             
  [4] "Basque"              "Bulgarian"           "Buryat"             
  [7] "Catalan"             "Coptic"              "Croatian"           

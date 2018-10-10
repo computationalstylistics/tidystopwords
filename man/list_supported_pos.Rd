@@ -50,9 +50,7 @@ Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.n
 Silvie Cinkova, Maciej Eder
 }
 
-\note{
-%%  ~~further notes~~
-}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
