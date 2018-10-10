@@ -16,7 +16,32 @@ Listing of languages to include in stopword lists you generate by \code{generate
 The function gives you a character vector of supported language names, e.g. "English".
 }
 \usage{
+<<<<<<< HEAD
 list_supported_language_names()
+=======
+\dontrun{## list_supported_language_names()}
+
+\dontrun{## 
+ [1] "Afrikaans"           "Ancient_Greek"       "Arabic"             
+ [4] "Basque"              "Bulgarian"           "Buryat"             
+ [7] "Catalan"             "Coptic"              "Croatian"           
+[10] "Czech"               "Danish"              "Dutch"              
+[13] "English"             "Estonian"            "Finnish"            
+[16] "French"              "Galician"            "German"             
+[19] "Gothic"              "Greek"               "Hebrew"             
+[22] "Hindi"               "Hungarian"           "Chinese"            
+[25] "Indonesian"          "Irish"               "Italian"            
+[28] "Japanese"            "Kazakh"              "Korean"             
+[31] "Kurmanji"            "Latin"               "Latvian"            
+[34] "North_Sami"          "Norwegian"           "Old_Church_Slavonic"
+[37] "Persian"             "Polish"              "Portuguese"         
+[40] "Romanian"            "Russian"             "Serbian"            
+[43] "Slovak"              "Slovenian"           "Spanish"            
+[46] "Swedish"             "Tamil"               "Turkish"            
+[49] "Ukrainian"           "Upper_Sorbian"       "Urdu"               
+[52] "Uyghur"              "Vietnamese"       
+}
+>>>>>>> 109fc4daf5ef404f1c97f3df2dd673a8873e9ab0
 }
 
 

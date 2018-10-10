@@ -26,17 +26,22 @@ generate_stoplist <- function(lang_name = c("Afrikaans", "Ancient_Greek", "Arabi
                               custom_filter = NULL
                               
                               )  {
-#    if (require("dplyr") == FALSE) {
-#    library(dplyr)
-#  }
-#  stopifnot(require("dplyr"))
-#  source("list_supported_language_names.R")
-#  source("list_supported_language_ids.R")
-#  load("sysdata.rda")
 
-data(multilingual_stoplist)
+                                  
 
-
+    # a hack to silence package warnings  
+    data("multilingual_stoplist", package = "stopwoRds", envir = environment()) 
+    multilingual_stoplist <- get("multilingual_stoplist", envir = environment()) 
+    #
+    language_name = multilingual_stoplist$language_name
+    language_id = multilingual_stoplist$language_id
+    lemma = multilingual_stoplist$lemma
+    word_form = multilingual_stoplist$word_form
+    UFeat = multilingual_stoplist$UFeat
+    POS = multilingual_stoplist$POS
+    
+    
+    
 
 
 ##############

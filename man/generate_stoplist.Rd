@@ -45,7 +45,12 @@ generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", #
                              stop_numerals = TRUE,
                              stop_symbols_crosslingual = TRUE,
                              stop_punctuation_crosslingual = TRUE,
+<<<<<<< HEAD
                              custom_filter = NULL )}
+=======
+                             custom_filter = NULL )
+}
+>>>>>>> 109fc4daf5ef404f1c97f3df2dd673a8873e9ab0
 %- maybe also 'usage' for other objects documented here.
 \details{
 %%  ~~ If necessary, more details than the description above ~~
