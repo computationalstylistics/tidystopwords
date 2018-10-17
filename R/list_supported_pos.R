@@ -3,6 +3,7 @@ list_supported_pos <- function() {
     data("multilingual_stoplist", package = "stopwoRds", envir = environment()) 
     multilingual_stoplist <- get("multilingual_stoplist", envir = environment()) 
     #
-    supported_languages <- unique(multilingual_stoplist$POS)
-    return(supported_languages)
+    supported_pos <- unique(multilingual_stoplist$POS)
+    supported_pos <- sort(supported_pos)
+    return(supported_pos)
   }
