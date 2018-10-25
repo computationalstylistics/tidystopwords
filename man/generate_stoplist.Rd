@@ -11,20 +11,7 @@ to toggle different parts of speech as well as to add new words.
 
 }
 \usage{
-generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic",
-                         "Basque","Bulgarian", "Buryat", "Catalan",
-                         "Chinese", "Coptic", "Croatian", "Czech",
-                         "Danish", "Dutch", "English", "Estonian",
-                         "Finnish", "French", "Galician", "German",
-                         "Gothic", "Greek", "Hebrew", "Hindi",
-                         "Hungarian", "Indonesian", "Irish", "Italian",
-                         "Japanese", "Kazakh", "Korean", "Kurmanji",
-                         "Latin", "Latvian", "North_Sami", "Norwegian",
-                         "Old_Church_Slavonic", "Persian", "Polish",
-                         "Portuguese", "Romanian", "Russian", "Serbian",
-                         "Slovak", "Slovenian", "Spanish", "Swedish",
-                         "Tamil", "Turkish", "Ukrainian", "Upper_Sorbian",
-                         "Urdu", "Uyghur", "Vietnamese"), 
+generate_stoplist(lang_name = NULL, 
                   lang_id = NULL,
                   output_form = "vector",
                   stop_lemmas = NULL,
@@ -46,9 +33,11 @@ generate_stoplist(lang_name = c("Afrikaans", "Ancient_Greek", "Arabic",
 }
 
 \arguments{
-\item{lang_name}{single string or a character vector. A vector of some languages by default.}
+\item{lang_name}{single string or a character vector. \code{NULL} by default. 
+However, when both \code{lang_name} and \code{lang_id} are \code{NULL}, the 
+function returns a vector of all word forms in all languages.}
 
-\item{lang_id}{a single string or a character vector. Call \code{list_supported_language_ids()} to see the supported ISO-639 language codes, if you prefer these codes to language names. Mind to set the \code{lang_name} argument to \code{NULL}, if you do so.}
+\item{lang_id}{a single string or a character vector. Call \code{list_supported_language_ids()} to see the supported ISO-639 language codes, if you prefer these codes to language names.}
 
 \item{output_form}{default \code{"vector"}, alternatively \code{"data.frame"}.}
 
