@@ -16,6 +16,6 @@ Install the package directly from the GitHub repository:
 
 ```
 library(devtools)
-install_github("computationalstylistics/stopwoRds")
+install_github("computationalstylistics/stopwoRds", build_vignettes = TRUE)
 ```
 
