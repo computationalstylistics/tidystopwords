@@ -80,9 +80,11 @@ Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.n
 }
 
 \examples{
-data(multilingual_stoplist)
 
+data(multilingual_stoplist)
 print(multilingual_stoplist)
+
+# this gives you the following results:
 
 \dontrun{
 Observations: 213,526Variables: 10

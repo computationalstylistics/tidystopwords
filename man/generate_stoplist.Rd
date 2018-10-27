@@ -151,10 +151,8 @@ Many languages are represented by balanced and large corpora of standard written
 }
 
 \examples{
-
-    # standard usage:
+    # standard usage (might return some non-ASCII characters):
     generate_stoplist(lang_name = "English")
-    
     
     # to get only conjunctions (11 items):
     generate_stoplist(lang_name = "English", 
