@@ -11,10 +11,6 @@ Multilingual stoplist
 This dataset contains a dataframe with individual word forms in rows. You can control the part of speech and various frequency counts of your desired stop-word list.
 }
 
-\usage{
-data("multilingual_stoplist")
-}
-
 \format{
   A data frame with 213,526 observations on the following 10 variables, encoded in UTF-8.
   \describe{
