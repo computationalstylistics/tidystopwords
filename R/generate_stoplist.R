@@ -1,14 +1,4 @@
-generate_stoplist <- function(lang_name = NULL
-  
-  #lang_name = c("Afrikaans", "Ancient_Greek", "Arabic", "Basque","Bulgarian", "Buryat", "Catalan", 
-                                                # "Chinese", "Coptic", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian", 
-                                                # "Finnish", "French", "Galician", "German", "Gothic", "Greek", "Hebrew", "Hindi", 
-                                                # "Hungarian", "Indonesian", "Irish", "Italian", "Japanese", "Kazakh", "Korean", 
-                                                # "Kurmanji", "Latin", "Latvian", "North_Sami", "Norwegian", "Old_Church_Slavonic",
-                                                # "Persian", "Polish" ,"Portuguese", "Romanian", "Russian", "Serbian", "Slovak",
-                                                # "Slovenian", "Spanish", "Swedish", "Tamil", "Turkish", "Ukrainian", "Upper_Sorbian",
-                                                # "Urdu", "Uyghur", "Vietnamese")
-                                                , 
+generate_stoplist <- function(lang_name = NULL, 
                               lang_id = NULL,
                               output_form = "vector",
                               stop_lemmas = NULL,
@@ -33,7 +23,7 @@ generate_stoplist <- function(lang_name = NULL
                                   
 
     # a hack to silence package warnings  
-    data("multilingual_stoplist", package = "stopwoRds", envir = environment()) 
+    data("multilingual_stoplist", package = "tidystopwords", envir = environment()) 
     multilingual_stoplist <- get("multilingual_stoplist", envir = environment()) 
     #
     language_name = multilingual_stoplist$language_name
@@ -43,12 +33,6 @@ generate_stoplist <- function(lang_name = NULL
     UFeat = multilingual_stoplist$UFeat
     POS = multilingual_stoplist$POS
     
-    
-    
-
-
-##############
-# Control of user language selection by language name.
 
 # the vector of language names is to be updated manually with every new version of the multilingual_stoplist.csv file
  # if (!isTRUE(all.equal(lang_name, c("Afrikaans", "Ancient_Greek", "Arabic", "Basque","Bulgarian", "Buryat", "Catalan", 
@@ -62,22 +46,21 @@ generate_stoplist <- function(lang_name = NULL
  # ))))
 
 ### added to allow selecting language with ID only    
-if (!is.null(lang_name))       
-   
-   {unsupported_language_names <- character()
-   for (i in 1:length(lang_name)){
-   if (!lang_name[i] %in% list_supported_language_names()){ 
-     unsupported_language_names <- c(unsupported_language_names, lang_name[i])
-     # Even if we do not manually update the vector of supported languages of the lang_name parameter, 
-     # missing languages will come through provided they occur in the current multilingual_stoplist.csv file. 
-   }}
-  if (length(unsupported_language_names) > 0){
-    print(unsupported_language_names)      
-    stop("Remove the item(s) listed above from lang_name. \n To check out the supported languages, call `list_supported_language_names()`.\n", call. = FALSE )
-    
-  }   
-   
- } 
+    if (!is.null(lang_name)) {
+
+        unsupported_language_names <- character()
+        for (i in 1:length(lang_name)){
+            if (!lang_name[i] %in% list_supported_language_names()){ 
+                unsupported_language_names <- c(unsupported_language_names, lang_name[i])
+                # Even if we do not manually update the vector of supported languages of the lang_name parameter, 
+                # missing languages will come through provided they occur in the current multilingual_stoplist.csv file. 
+            }
+        }
+        if (length(unsupported_language_names) > 0){
+            print(unsupported_language_names)      
+            stop("Remove the item(s) listed above from lang_name. \n To check out the supported languages, call `list_supported_language_names()`.\n", call. = FALSE )
+        }   
+   } 
 
 # Selection in both lang_name and lang_id triggers a warning.  
     if (!is.null(lang_id)) {
@@ -98,43 +81,6 @@ if (!is.null(lang_name))
       }   
       
       
-      # if (!isTRUE(all.equal(lang_name, c("Afrikaans", "Ancient_Greek", "Arabic", "Basque","Bulgarian",
-      #  "Buryat", "Catalan",
-      #                  "Chinese", "Coptic", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian",
-      #                  "Finnish", "French", "Galician", "German", "Gothic", "Greek", "Hebrew", "Hindi",
-      #                  "Hungarian", "Indonesian", "Irish", "Italian", "Japanese", "Kazakh", "Korean",
-      #                  "Kurmanji", "Latin", "Latvian", "North_Sami", "Norwegian", "Old_Church_Slavonic",
-      #                  "Persian", "Polish" ,"Portuguese", "Romanian", "Russian", "Serbian", "Slovak",
-      #                  "Slovenian", "Spanish", "Swedish", "Tamil", "Turkish", "Ukrainian", "Upper_Sorbian",
-      #                  "Urdu", "Uyghur", "Vietnamese")))) {
-      # warning("HEADS UP! Language selection by_name as well as by lang_id. \n You may want to check your selection.", call. = FALSE)
-      # }}
-  # if (is.null(lang_id) &
-              # isTRUE(all.equal(lang_name, c("Afrikaans", "Ancient_Greek", "Arabic",
-              # "Basque","Bulgarian", "Buryat", "Catalan",
-              #                                 "Chinese", "Coptic", "Croatian",
-              #                                  "Czech", "Danish", "Dutch", "English", "Estonian",
-              #                                 "Finnish", "French", "Galician", "German",
-              #                                 "Gothic", "Greek", "Hebrew", "Hindi",
-              #                                 "Hungarian", "Indonesian", "Irish", "Italian",
-              #                                 "Japanese", "Kazakh", "Korean",
-              #                                 "Kurmanji", "Latin", "Latvian", "North_Sami",
-              #                                 "Norwegian", "Old_Church_Slavonic",
-              #                                 "Persian", "Polish" ,"Portuguese", "Romanian",
-              #                                 "Russian", "Serbian", "Slovak",
-              #                                 "Slovenian", "Spanish", "Swedish", "Tamil",
-              #                                 "Turkish", "Ukrainian", "Upper_Sorbian",
-              #                                 "Urdu", "Uyghur", "Vietnamese")))){
-              #   warning("HEADS UP! Selection includes all supported languages. \n  You may want to check your selection.", call. = FALSE)
-              # }
-    ######
-    ######added to allow selection with lang_id only 
-    # if (length(lang_name) == 0 & length(lang_id) == 0) 
-    # {
-    #  lang_name <- list_supported_language_names()
-    #  print(lang_name)
-    #  warning("HEADS UP! Selection includes all supported languages. \n  You may want to check your selection.", call. = FALSE)
-    # }
       if (!is.null(lang_name) & !is.null(lang_id)) {
       warning("HEADS UP! Language selection by_name as well as by lang_id. \n You may want to check your selection.\n", call. = FALSE)
       }}

@@ -1,5 +1,5 @@
 ---
-title: "Stopwords with the package 'stopwoRds'"
+title: "Multilingual Stopwords with the Package 'tidystopwords'"
 author: "Silvie Cinkova"
 output: rmarkdown::html_vignette
 vignette: >
@@ -20,12 +20,10 @@ library(dplyr)
 
 
 
-This vignette explains basic functionalities of the package `stopwoRds`. The idea behind 
-this package is to give the user control over the stop-word selection, which is
-one of the most important steps in any text-mining analysis.
+This vignette explains basic functionalities of the package `tidystopwords`. The idea behind this package is to give the user control over the stop-word selection, which is one of the most important steps in any text-mining analysis.
 
 ```{r message = FALSE, warning = FALSE}
-library(stopwoRds)
+library(tidystopwords)
 ```
 
 
@@ -34,17 +32,11 @@ library(stopwoRds)
 
 # Introduction
 
-When processing texts, you sometimes need to remove certain groups of unhelpful 
-words; e.g. in topic modeling, you remove the so-called *function words*, aka 
-*auxiliary words*: prepositions, conjunctions, articles, etc. You use a *stoplist*
-or a *list of stop words*. 
+When processing texts, you sometimes need to remove certain groups of unhelpful words; e.g. in topic modeling, you remove the so-called *function words*, aka  *auxiliary words*: prepositions, conjunctions, articles, etc. You use a *stoplist* or a *list of stop words*. 
 
-This package creates stoplists in many languages; it allows you to control 
-which words your individual stoplist will contain, in a way consistent
-across all the supported languages.  
+This package creates stoplists in many languages; it allows you to control which words your individual stoplist will contain, in a way consistent across all the supported languages.
 
-To make the output examples as crisp as possible, we run additional sampling
-and filters throughout this document. 
+To make the output examples as crisp as possible, we run additional sampling and filters throughout this document. 
 
 
 # Which word classes you can control 
@@ -55,59 +47,36 @@ The package lets you control the following word classes:
   
  - __Abbreviations__;  
  
- - __Pronominals__; e.g. *he, mine, her, it, which, where, how, when*. As the 
- example suggests, this includes several subtypes of pronouns as well as 
- pronominal adverbs;
+ - __Pronominals__; e.g. *he, mine, her, it, which, where, how, when*. As the example suggests, this includes several subtypes of pronouns as well as pronominal adverbs;
  
- - __Determiners__ and __Quantifiers__ are typically articles (*the, a, an*) and demonstrative 
- pronouns (e.g. *that boy*), as well as *all, every, both*, or *none*;
+ - __Determiners__ and __Quantifiers__ are typically articles (*the, a, an*) and demonstrative pronouns (e.g. *that boy*), as well as *all, every, both*, or *none*;
  
- - __Conjunctions__ are words that connect two clauses that could also stand
- separately; e.g. *and, or*;
+ - __Conjunctions__ are words that connect two clauses that could also stand separately; e.g. *and, or*;
  
- - __Adpositions__ is an umbrella term for prepositions and postpositions. Prepositions (*in, for*) 
- are common in most languages; postpositions less so (*ago*);
+ - __Adpositions__ is an umbrella term for prepositions and postpositions. Prepositions (*in, for*)  are common in most languages; postpositions less so (*ago*);
  
- - __Subordinating conjunctions__ are words that connect two clauses in a way that
- makes one clause syntactically subordinate to the other (*if, although*); 
+ - __Subordinating conjunctions__ are words that connect two clauses in a way that makes one clause syntactically subordinate to the other (*if, although*); 
  
- - __Auxiliary verbs__ are typically the verbs *to be* and *to have* in complex
- verb forms (e.g. *John has been reading.*);
+ - __Auxiliary verbs__ are typically the verbs *to be* and *to have* in complex verb forms (e.g. *John has been reading.*);
  
- - __Interjections__ are words rendering diverse sounds (*meow*) and short 
- formulaic expressions (*yes*, *hello*), often exclamative: *dammit*, *oh*.
+ - __Interjections__ are words rendering diverse sounds (*meow*) and short formulaic expressions (*yes*, *hello*), often exclamative: *dammit*, *oh*.
  
- - __Particles__: their definition is fairly language-specific, ranging from 
- particles in English phrasal verbs (*take off*) to diverse sentence adverbials 
- (*fortunately*);
+ - __Particles__: their definition is fairly language-specific, ranging from particles in English phrasal verbs (*take off*) to diverse sentence adverbials (*fortunately*);
  
  - __Numerals__ are digits and words for numbers (*three*, *third*). 
  
  
-By default, the stop list will contain all of these categories, and you can 
-switch off those that you do not want to stoplist in your documents. For 
-instance, you might be particularly interested in quantifying expressions, and 
-then you would like to keep the determiners and quantifiers as well as numerals,
-but you still want to get rid of all the other word classes. Then you would 
-switch off the determiner-quantifier and numeral stoplisting. 
+By default, the stop list will contain all of these categories, and you can switch off those that you do not want to stoplist in your documents. For instance, you might be particularly interested in quantifying expressions, and then you would like to keep the determiners and quantifiers as well as numerals, but you still want to get rid of all the other word classes. Then you would switch off the determiner-quantifier and numeral stoplisting. 
 
 # How does the word-class control work?
 
-*If you have no linguistic background and just want to quickly get a 
-stop-word list without much customization, feel free to skip this section.* 
+*If you have no linguistic background and just want to quickly get a stop-word list without much customization, feel free to skip this section.* 
 
 ## Universal Dependencies Treebanks
 
-Our package is __based on a large data frame__ called `multilingual_stoplist`, which
-has been extracted from the 
-[Universal Dependencies treebanks](http://universaldependencies.org/) 
-(henceforth UD). 
+Our package is __based on a large data frame__ called `multilingual_stoplist`, which has been extracted from the [Universal Dependencies treebanks](http://universaldependencies.org/) (henceforth UD). 
 
-UD is a framework for cross-linguistically consistent 
-grammatical annotation that comprises lemmas and morphological categories 
-of individual words, along with syntactic dependencies within each sentence.  
-The corpora are either manually annotated from scratch or transformed from 
-different annotation schemes and manually post-edited.
+UD is a framework for cross-linguistically consistent grammatical annotation that comprises lemmas and morphological categories of individual words, along with syntactic dependencies within each sentence. The corpora are either manually annotated from scratch or transformed from different annotation schemes and manually post-edited.
 
 The morphological information consists of three parts:
 
@@ -116,7 +85,7 @@ The morphological information consists of three parts:
 - Tag from a language-specific tagset.
 
 While each language can have several language-specific tagsets, the two 
-"universal" morphological categories are cross-linguistically consistent. The 
+“universal” morphological categories are cross-linguistically consistent. The 
 __Universal POS tags__ are very crude categories, such as `NOUN` or `VERB`. A number 
 of more fine-grained morphological categories are stored in the __Universal Features__. 
 These are for instance `Number`, `Animacy`, `Person`, and `Tense`. Each language

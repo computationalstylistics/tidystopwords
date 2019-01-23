@@ -1,13 +1,13 @@
-Package: stopwoRds
+Package: tidystopwords
 Type: Package
-Title: A Selection of Stopwords in Different Languages
-Version: 0.0.4
-Date: 2018-10-27
+Title: Customisable Lists of Stopwords in 53 Languages
+Version: 0.9.0
+Date: 2019-01-23
 Author: Silvie Cinkova, Maciej Eder
 Maintainer: Maciej Eder <maciejeder@gmail.com>
 Depends: R (>= 2.14)
 Imports: dplyr, stringr
-Description: The package contains functions [generate_stoplist(), list_supported_languages(), list_supported_pos].
+Description: Functions to generate stopword lists in 53 languages, in a way consistent across all the languages supported. The generated lists are based on the morphological tagset from the Universal Dependencies.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: FALSE

@@ -5,10 +5,11 @@
 \title{
 Listing of language ids to include in stopword lists you generate by `generate_stoplist()`.
 }
+
 \description{
 The function gives you a character vector of supported language ids, e.g. "en", "cs", "pl". 
-
 }
+
 \usage{
 list_supported_language_ids()
 }

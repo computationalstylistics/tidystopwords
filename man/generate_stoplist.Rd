@@ -45,7 +45,7 @@ function returns a vector of all word forms in all languages.}
 
 \item{stop_forms}{default \code{NULL}. Supply a string or a character vector. You get all word forms present in the data set for your selected language(s). POS disambiguation is not possible with this argument: mind homonyms. 
     
-The following parameters extract word forms from the data set with the relevant  linguistic markup for your selected languages(s). It is often a combination of the coarse-grained universal POS tag and a set of so-called Universal Features. The same set of filters are used across all languages.}
+The following parameters extract word forms from the data set with the relevant linguistic markup for your selected languages(s). It is often a combination of the coarse-grained universal POS tag and a set of so-called Universal Features. The same set of filters are used across all languages.}
 
 \item{stop_foreign_words}{default \code{TRUE}.}
 
