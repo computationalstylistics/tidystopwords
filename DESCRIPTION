@@ -1,6 +1,6 @@
 Package: tidystopwords
 Type: Package
-Title: Customisable Lists of Stopwords in 53 Languages
+Title: Customizable Lists of Stopwords in 53 Languages
 Version: 0.9.0
 Date: 2019-01-23
 Author: Silvie Cinkova, Maciej Eder

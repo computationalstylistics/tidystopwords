@@ -1,4 +1,7 @@
-# tidystopwords
+# tidystopwords: R package for multilingual stopwords
+
+**Authors:** Silvie Cinková<sup>*</sup>, Maciej Eder<br/>
+**License:** [GPL-3](https://opensource.org/licenses/GPL-3.0)
 
 An R package containing customizable lists of stopwords in multiple languages; it attempts to follow [tidy data principles](https://www.jstatsoft.org/article/view/v059i10).
 
