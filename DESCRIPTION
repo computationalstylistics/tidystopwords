@@ -2,7 +2,7 @@ Package: tidystopwords
 Type: Package
 Title: Customizable Lists of Stopwords in 53 Languages
 Version: 0.9.0
-Date: 2019-01-23
+Date: 2019-02-6
 Author: Silvie Cinkova, Maciej Eder
 Maintainer: Maciej Eder <maciejeder@gmail.com>
 Depends: R (>= 2.14)
