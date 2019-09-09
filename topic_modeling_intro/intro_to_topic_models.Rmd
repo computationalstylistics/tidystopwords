@@ -1,0 +1,700 @@
+---
+title: "Introduction to Distributional Semantics: (1) Topic Modeling"
+author: Maciej Eder
+date: 14.09.2019
+output: 
+  rmdshower::shower_presentation:
+    self_contained: false
+    katex: true
+    fig_width: 9
+    fig_height: 6
+---
+
+
+
+
+
+
+```{r setup, include = FALSE}
+
+# set global chunk options
+library(knitr)
+library(wordcloud)
+library(stylo)
+
+load("img_and_data/doc_topics.RData")
+load("img_and_data/topic_words.RData")
+
+opts_chunk$set(cache=TRUE)
+```
+
+
+
+
+## { .white }
+
+<p class="black" style="font-size: 180%">
+<b>Introduction to  Distributional Semantics</b> </br> <b>(1) Topic Modeling</b>
+</p>
+<p class="black" style="font-size: 120%">
+Maciej Eder
+</p>
+<p class="black" style="font-size: 80%; margin-bottom: 10em;">
+Institute of Polish Language (Polish Academy of Sciences)
+</p>
+<p class="black">
+IQLA-GIAT Summer School, Padova, 14.09.2019
+</p>
+
+
+
+
+
+## Motivation
+
+* Information retrieval:
+  * How to “read” a big collection of documents, e.g. an archive?
+  * How to get relevant websites using search engines?
+  * How to fine-grain the results for ‘apple’ (1. a fruit, 2. a company)
+* Linguistics:
+  * What is the underlying model for defining word meaning?
+
+---
+
+
+
+
+
+
+## Meaning defined by the context
+
+> The meaning of words lies in their use.
+
+(Wittgenstein 1953: 80, 109)
+
+> You shall know a word by the company it keeps.
+
+(Firth 1962: 11)
+
+---
+
+
+
+
+
+
+
+
+## Distributional semantics
+
+* A set of methods that make **no assumption** as to words’ relations and/or functions
+* Meaning of the words is **inferred** from their:
+  * Frequency
+  * Context
+* These methods include:
+  * Keyword analysis
+  * Collocations
+  * Topic modeling
+  * Word embeddings
+
+---
+
+
+
+
+
+
+
+
+
+
+## 
+
+<h2 class="shout">Keywords</h2>
+
+---
+
+
+
+
+## Keywords in information extraction
+
+* Extracting the contents, by identifying the most **meaningful** words
+
+
+---
+
+
+
+
+
+
+
+
+
+## Emily Bronte, _The Wuthering Heights_
+
+heathcliff, linton, catherine, hareton, earnshaw, cathy, edgar, ellen, heights, hindley, nelly, ll, grange, i, wuthering, t, joseph, isabella, master, gimmerton, zillah, m, exclaimed, he, thrushcross, and, answered, yah, kenneth, ve, maister, lockwood, kitchen, you, dean, moors, replied, cried, him, muttered, lintons, papa, she, till, commenced, on, wer, ech, shoo, leant, hearth, bonny, door, stairs, hell, me, crags, moor, wouldn, fiend, settle, jabez, penistone, fire, ye, its, bid, nowt, naught, yer, hush, mistress, grew, lad, compelled, minny, won, hisseln, skulker, soa, wisht, cousin, lattice, didn, yon, minute, lass, needn, inquired, snow, branderham, flaysome, gooid, sud, thear, affirming, interrupted, couldn, window, 
+...
+
+---
+
+
+
+
+## A simple idea...
+
+> I have just returned from a visit to my landlord – the solitary neighbour that I shall be troubled with.
+
+neighbour solitary troubled landlord visit returned just shall from I have be with my that a to the
+
+``` {r echo = FALSE, message = FALSE, fig.width = 9, fig.height = 3}
+par(mar = c(2, 4, 0, 5)) # default margins are too large!
+plot(c(12.961, 12.742, 12.724, 12.030, 9.185, 8.350, 6.904, 5.450, 3.521, 2.855, 2.325, 2.049, 1.958, 1.845, 1.192, 0.681, 0.221, 0.056), ylab = "keyness", xlab = "", ylim = c(0, 15), type = "p", lwd = 2, col = "blue")
+```
+
+---
+
+
+
+
+
+
+## 
+
+<h2 class="shout">Collocations</h2>
+
+---
+
+
+
+
+
+
+## Collocations in corpus linguistics
+
+A collocation is a pair of words that co-occur more often than would be expected by chance.
+
+---
+
+
+
+
+## Word frequencies as probabilities
+
+* Probability of finding a word A in a corpus is $P(A)$
+* Probability of finding a word B in a corpus is $P(B)$
+* Probability of finding them together is $P(A) \times P(B)$
+
+An example:
+$$ P(A) = 0.001 \quad\quad P(B) = 0.002 \quad\quad P(A) \times P(B) = 0.000002 $$
+
+---
+
+
+
+
+
+
+
+
+## Collocations in corpus linguistics
+
+* However, some words tend to ‘like’ each other...
+* ... despite their theoretical probabilities.
+* _Cf._:
+
+strong tea — *powerful tea
+
+powerful computer — *strong computer
+
+---
+
+
+
+
+
+
+## 
+
+<h2 class="shout">Topic modeling</h2>
+
+---
+
+
+
+
+
+
+
+
+
+
+## What’s the aim?
+
+* To discover hidden thematic structure in large collections of texts...
+* ... without any prior knowledge about word meanings or grammar.
+
+---
+
+
+
+
+
+
+
+
+## Assumptions
+
+* Certain words tend to occur more frequently in a text covering a given topic than in other texts.
+* Texts are usually about many topics.
+* A topic is a recurring pattern of co-occurring words.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+## What is a topic?
+
+> We formally define a topic to be a distribution over a fixed vocabulary. For example, the _genetics_ topic has words about genetics with high probability and the evolutionary biology topic has words about _evolutionary biology_ with high probability. 
+
+(Blei 2012, 78)
+
+---
+
+
+
+
+
+
+
+
+##
+
+<img src="img_and_data/lda_blei_1.png" class="cover">
+
+---
+
+
+
+
+
+## Latent Dirichlet Allocation (LDA)
+
+* Each **topic** is a distribution over words
+* Each **document** is a mixture of corpus-wide topics
+* Each **word** is drawn from one of those topics
+
+---
+
+
+
+
+
+
+## Latent Dirichlet Allocation (LDA)
+
+* in reality, we only observe the documents
+* the other structure are **hidden variables**
+* the goal is **to infer** the hidden variables
+
+---
+
+
+
+
+##
+
+<img src="img_and_data/lda_blei_2.png" class="cover">
+
+---
+
+
+
+
+
+
+## Assumptions (cont.)
+
+* The order of words is not relevant (“bag of words”)
+* The order of documents is not relevant
+* The number of topics is fixed and known in advance
+
+---
+
+
+
+
+## A topic (50 top words)
+
+
+fight soldier arms war soldiers field fly sword horse valiant march battle brave messenger arm army trumpet valour kings camp alarum walls join wars slain tent forces gates drum courage trumpets lion town fought foes english armour city saint guard colours victory herald swords fame armed country wounds plain safe ...
+
+``` {r echo = FALSE, message = FALSE, fig.width = 9, fig.height = 3}
+par(mar = c(2, 4, 0, 5)) # default margins are too large!
+plot(sort(topic.words[6,], decreasing = TRUE)[1:1000], ylab = "proportion", xlab = "", ylim = c(0, 0.03), col = "blue")
+```
+
+---
+
+
+
+
+
+
+
+## 
+
+<h2 class="shout">Shakespeare</h2>
+
+---
+
+
+
+
+
+## Topics in the Shakespearean canon
+
+* a corpus of 42 texts by Shakespeare...
+* ... sliced into samples of 1000 words each
+* topic model inferred:
+  * LDA algorithm
+  * 25 topics
+  * excluded speakers’ names
+  * excluded common stop words
+  * topics visualized using wordclouds
+
+
+
+
+
+
+## Fights & swords (topic 6)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 6
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+
+## Family relations (topic 21)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 21
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+
+
+## Tears & sorrow (topic 24)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 24
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+## Night & sleep (topic 23)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 23
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+
+## Face & kisses (topic 8)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 8
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+## Love (topic 5)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 5
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+## The elements (topic 10)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 10
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+## People? (topic 15)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 15
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+## A mixture of everything? (topic 17)
+
+``` {r echo = FALSE, message = FALSE}
+# to get N words from Xth topic
+no.of.words = 50
+topic.id = 17
+current.topic = sort(topic.words[topic.id,], decreasing = T)[1:no.of.words]
+
+# to make a wordcloud out of the most characteristic topics
+wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0)
+```
+
+---
+
+
+
+
+
+## How to interpret topics?
+
+> Indeed calling these models “topic models” is retrospective – the topics that emerge from the inference algorithm are interpretable for almost any collection that is analyzed. The fact that these look like topics has to do with the statistical structure of observed language and how it interacts with the specific probabilistic assumptions of LDA. 
+
+(Blei 2012, 79)
+
+---
+
+
+
+
+## The climax of _Romeo and Juliet_
+
+``` {r echo = FALSE, message = FALSE}
+# to plot the proportions of topics in the Xth sample
+no.of.sample = 880
+plot(doc.topics[no.of.sample,], type = "h", xlab = "topic ID", ylab = "probability", ylim = c(0, 0.5), main = rownames(doc.topics)[no.of.sample], lwd = 5, col = "green")
+```
+
+---
+
+
+
+
+
+
+## The beginnig of _The Tempest_
+
+``` {r echo = FALSE, message = FALSE}
+# to plot the proportions of topics in the Xth sample
+no.of.sample = 626
+plot(doc.topics[no.of.sample,], type = "h", xlab = "topic ID", ylab = "probability", ylim = c(0, 0.5), main = rownames(doc.topics)[no.of.sample], lwd = 5, col = "blue")
+```
+
+---
+
+
+
+
+
+
+## _A Midsummer Night’s Dream_
+
+``` {r echo = FALSE, message = FALSE}
+# to plot the proportions of topics in the Xth sample
+no.of.sample = 24
+plot(doc.topics[no.of.sample,], type = "h", xlab = "topic ID", ylab = "probability", ylim = c(0, 0.5), main = rownames(doc.topics)[no.of.sample], lwd = 5, col = "red")
+```
+
+---
+
+
+
+
+## Topics vs. genres
+
+* Proportions of topics can be used as features in machine learning.
+* Will the topic structure corroborate the traditional division into Shakespearean genres?
+  * red: comedies
+  * orange: tragedies
+  * green: histories
+  * black: romances
+  * blue: poetry
+
+---
+
+
+
+
+## Topics vs. genres – cluster analysis
+
+``` {r echo = FALSE, message = FALSE}
+stylo(frequencies = doc.topics, gui = FALSE, dendrogram.layout.horizontal = FALSE, titles.on.graphs = FALSE)
+```
+
+---
+
+
+
+
+
+
+
+
+## Topics vs. genres – PCA
+
+``` {r echo = FALSE, message = FALSE}
+stylo(frequencies = doc.topics, gui = FALSE, analysis.type = "PCR", titles.on.graphs = FALSE)
+
+```
+
+---
+
+
+
+
+
+
+## Topics vs. genres – PCA
+
+``` {r echo = FALSE, message = FALSE}
+stylo(frequencies = doc.topics, gui = FALSE, analysis.type = "PCR", titles.on.graphs = FALSE, text.id.on.graphs = "points")
+```
+
+---
+
+
+
+
+
+## Topics vs. genres
+
+<img src="img_and_data/topics_in_docs.png" class="cover">
+
+---
+
+
+
+## _Titus Andronicus_
+
+<img src="img_and_data/topics_titus.png" class="cover">
+
+---
+
+
+
+
+## _The Tempest_
+
+<img src="img_and_data/topics_tempest.png" class="cover">
+
+---
+
+
+
+
+## _Hamlet_
+
+<img src="img_and_data/topics_hamlet.png" class="cover">
+
+---
+
+
+
+
+## Implementations
+
+* [Mallet](http://mallet.cs.umass.edu/) (Java)
+* [Stanford Topic Modeling Toolbox](https://nlp.stanford.edu/software/tmt/tmt-0.4/) (Java)
+* [gensim](https://radimrehurek.com/gensim/) (Python)
+* [lda](https://github.com/lda-project/lda) (Python)
+* [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html) (R)
+* [Mallet invoked from R](https://cran.r-project.org/web/packages/mallet/index.html) (R + Java)
+* [**DARIAH Topic Explorer**](https://dariah-de.github.io/TopicsExplorer/) (standalone)
+
+---
+
+
+
+``` {r eval = FALSE, message = FALSE}
+names(sort(topic.words[6,], decreasing = TRUE))[1:10]
+
+heatmap(as.matrix(aa), col=heat.colors(256), scale="column", margins=c(25,4))
+```
+
