@@ -120,7 +120,8 @@ IQLA-GIAT Summer School, Padova, 14.09.2019
 ## Keywords in information extraction
 
 * Extracting the contents, by identifying the most **meaningful** words
-
+* The goal is to compare a text against a corpus
+* Keyword = a word significantly more frequent in a given text
 
 ---
 
@@ -173,7 +174,9 @@ plot(c(12.961, 12.742, 12.724, 12.030, 9.185, 8.350, 6.904, 5.450, 3.521, 2.855,
 
 ## Collocations in corpus linguistics
 
-A collocation is a pair of words that co-occur more often than would be expected by chance.
+* A collocation is a pair of words that co-occur more often than would be expected by chance.
+* Typical collocations are idioms, as _hot potato_, and phrasal verbs.
+* Word frequencies used to calculate co-occurence probabilities. 
 
 ---
 
@@ -544,6 +547,20 @@ wordcloud(names(current.topic), current.topic, random.order = FALSE, rot.per = 0
 
 
 
+
+
+## Topics in documents
+
+* Each document contains (many) topics.
+* The proportions of these topics can be plotted.
+
+---
+
+
+
+
+
+
 ## The climax of _Romeo and Juliet_
 
 ``` {r echo = FALSE, message = FALSE}
@@ -688,13 +705,7 @@ stylo(frequencies = doc.topics, gui = FALSE, analysis.type = "PCR", titles.on.gr
 * [Mallet invoked from R](https://cran.r-project.org/web/packages/mallet/index.html) (R + Java)
 * [**DARIAH Topic Explorer**](https://dariah-de.github.io/TopicsExplorer/) (standalone)
 
----
 
 
 
-``` {r eval = FALSE, message = FALSE}
-names(sort(topic.words[6,], decreasing = TRUE))[1:10]
-
-heatmap(as.matrix(aa), col=heat.colors(256), scale="column", margins=c(25,4))
-```
 
