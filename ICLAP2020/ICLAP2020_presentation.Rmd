@@ -1,0 +1,1256 @@
+---
+title: "From Authorship Attribution to Language Change"
+author: Maciej Eder
+date: 19th November 2020
+output:
+  rmdshower::shower_presentation:
+    self_contained: false
+    theme: ribbon
+    center: true
+    ratio: 4x3
+    katex: true
+    fig_width: 9
+    fig_height: 6
+---
+
+
+
+
+```{r setup, include=FALSE}
+# set global chunk options
+
+library(knitr)
+library(stylo)
+#library(plotly)
+#library(fmsb)
+
+load("first_results_100mfw_RUN-2.Rdata")
+load("distinctive_features_1000mfw.Rdata")
+
+words = table(unlist(lapply(current.year.results, function(x) x[, 2])))
+words = names(words)
+words.sd = c()
+for(word in words) {
+    # extracting the values for a given word, as a function of time
+    current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+    # assigning 0 to the non-existent values
+    current.word[is.na(current.word)] = 0
+    current.word = sd(current.word)
+    words.sd = c(words.sd, current.word)
+}
+
+names(words.sd) = words
+words = names(sort(words.sd, decreasing = TRUE))
+
+# getting rid of punctuation
+words = words[grep("\\w+", words)]
+
+# getting rid of "<p>", "million"
+words = words[-c(grep("<p>", words))]
+words = words[-c(grep("million", words))]
+
+my.blue = rgb(0.15, 0.45, 0.96)
+my.green = rgb(0.15, 0.85, 0.27, 0.7)
+my.red = rgb(0.92, 0.3, 0.3, 0.6)
+my.grey = rgb(0,0,0,.5)
+my.orange = rgb(1,0.5,0.2,0.6) 
+my.teal = rgb(0, 0.5, 0.5, 0.7)  #### or: my.teal = rgb(0.24, 0.65, 0.75, 0.7)
+my.violet = rgb(0.75, 0.25, 0.82, 0.7)
+
+opts_chunk$set(cache=TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+## { .white }
+
+<img src="img/IMG_1636.jpg" class="cover">
+
+<h2 class="white" style="margin-bottom: 1em;">
+Style Variation: </br> From Authorship Attribution </br> to Language Change
+</h2>
+<p class="white" style="font-size: 120%">
+Maciej Eder
+</p>
+<p class="white" style="font-size: 80%; margin-bottom: 6em;">
+Institute of Polish Language (Polish Academy of Sciences)
+</p>
+<p class="white">
+ICLAP 2020, 19th November 2020
+</p>
+
+
+
+
+## Overview
+
+* Stylistic fingerprint
+* Authorship attribution at a glance
+* Stylometry as a tool to assess language change
+
+
+
+##
+
+<h2 class="shout">Fingerprint</h2>
+
+
+
+## The notion of stylistic fingerprint
+
+* An area between language constrains and a freedom of choice
+* Undiscoverable with the naked eye
+* Beyond authorial control
+* Resistant to imitation, plagiarism and parody
+* Popular solution: **frequencies of the Most Frequent Words**
+
+
+
+
+
+## Words are not distributed evenly
+
+It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife. 
+However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered the rightful property of some one or other of their daughters. 
+
+“My dear Mr. Bennet,” said his lady to him one day, “have you heard that Netherfield Park is let at last?” 
+Mr. Bennet replied that he had not. 
+
+“But it is,” returned she; “for Mrs. Long has just been here, and she told me all about it.” 
+Mr. Bennet made no answer. 
+
+“Do you not want to know who has taken it?” cried his wife impatiently. 
+“You want to tell me, and I have no objection to hearing it.” 
+This was invitation enough. 
+
+
+
+
+
+## Function words = frequent words
+
+**It** **is** **a** truth universally acknowledged, **that** **a** single man **in** possession **of** **a** good fortune, must **be** **in** want **of** **a** wife. 
+**However** little known **the** feelings **or** views **of** **such** **a** man **may** **be** **on** **his** first entering **a** neighbourhood, **this** truth **is** **so** well fixed **in** **the** minds **of** **the** surrounding families, **that** **he** **is** considered **the** rightful property **of** **some** one **or** other **of** **their** daughters. 
+
+“**My** dear Mr. Bennet,” said **his** lady **to** **him** one day, “**have** **you** heard **that** Netherfield Park **is** let **at** **last**?” 
+Mr. Bennet replied **that** **he** **had** **not**. 
+
+“**But** **it** **is**,” returned **she**; “**for** Mrs. Long **has** **just** **been** here, **and** **she** told **me** all **about** **it**.” 
+Mr. Bennet made **no** answer. 
+
+“**Do** **you** **not** want **to** know **who** **has** taken **it**?” cried **his** wife impatiently. 
+“**You** want **to** tell **me**, **and** **I** **have** **no** objection **to** hearing **it**.” 
+**This** **was** invitation enough. 
+
+
+## Word frequencies as language features
+
+raw occurrences of words:
+
+```{r, echo = FALSE, message = FALSE}
+data(novels)
+xx = sort(table(unlist(strsplit(tolower(novels[[4]]), "[^A-Za-z]+"))), decreasing = TRUE)
+xx[1:14]
+```
+
+relative frequencies:
+
+```{r, echo = FALSE, message = FALSE}
+round(xx[1:14]/ sum(xx) * 100, 2)
+```
+
+
+
+
+## Rank/frequency dependence
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+plot(as.numeric(sort(table(unlist(strsplit(tolower(novels[[4]]), "[^A-Za-z]+"))), decreasing = TRUE))[1:300], ylab = "frequency", xlab = "rank", col = "brown")
+```
+
+
+
+
+
+
+##
+
+<h2 class="shout">Authorship attribution</h2>
+
+
+
+
+
+## Non-traditional authorship attribution
+
+Given:
+
+* a text of uncertain or anonymous authorship, and
+* a comparison corpus of texts by known authors,
+
+is it possible to find the **'nearest neighbor'**
+among the available candidates?
+
+
+
+
+
+
+
+## Example: _The Cuckoo's Calling_
+
+* A debut by an unknown author Robert Galbraith
+* Only 1500 copies sold
+* Supposedly written by J.K. Rowling
+
+
+
+
+## Stylometry: where it (usually) begins
+
+```{r, echo = FALSE, message = FALSE}
+data(galbraith)
+rownames(galbraith) = gsub("_[0-9]+", "", rownames(galbraith))
+round(galbraith[1:20,1:8], 2)
+```
+
+
+
+
+## Table of computed distances
+
+```{r, echo = FALSE, message = FALSE}
+round(as.matrix(dist.delta(galbraith)), 4)[1:20,1:3]
+```
+
+
+
+
+## Hierarchical cluster analysis
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+stylo(frequencies = galbraith, gui = FALSE, titles.on.graphs = FALSE)
+```
+
+
+
+## Multidimensional scaling
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+stylo(frequencies = galbraith, gui = FALSE, analysis.type = "MDS", titles.on.graphs = FALSE)
+```
+
+
+
+## Bootstrap consensus tree
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+stylo(frequencies = galbraith, gui = FALSE, analysis.type = "BCT", mfw.min = 100, mfw.max = 1000, titles.on.graphs = FALSE)
+```
+
+
+
+## Supervised machine-learning approach
+
+```{r, echo = FALSE, message = FALSE}
+cat("Testing a given candidate against imposters...\n
+coben \n
+lewis \n
+rowling \n
+tolkien \n\n")
+imposters(galbraith)
+```
+
+
+
+
+## Stylometry beyond authorship attribution
+
+* Authorship profiling
+* Forensic linguistics
+* Register analysis
+* Genre recognition
+* Gender differences
+* Translatorial signal
+* Early vs. mature style
+* Style evolution
+* Detecting dementia
+* ...
+
+
+
+
+
+
+
+
+
+## 
+
+<h2 class="shout">Language change?</h2>
+
+
+
+## Aim of the study
+
+* Introducing **a method** to trace changes in language
+* **No a priori assumptions** as to the change-makers
+* Identifying **the impactful words** over time
+* Application on the Corpus of Historical American English (COHA)
+
+
+
+
+## Langauge change
+
+* There’s no clear definition of language change
+* A more feasible approach: tracing changes in language.
+* Any two text compared exhibit differences (e.g. in word frequencies), the same applies to any two samples of a language.
+* A provisional definition: a language change is an accumulative effect of significant changes in a language.
+
+
+
+## 
+
+<h2 class="shout">The dynamics <br/> of change</h2>
+
+
+
+
+
+
+## The dynamics of language change
+
+* Purely linear trends – not very probable.
+* Rather, epochs of substantial stylistic drift follow periods of stagnation. 
+* The goal: observing the accelleration of language change.
+
+
+
+
+
+## What is responsible for a change?
+
+* A relatively small number of words that reflect changes in societies?
+    * (e.g. _horse_ > _automobile_ > _car_)
+* A aggregation of _numerous_ features of individually weak discrimination power?
+    * (e.g. the signal of authorship)
+
+
+
+
+
+## Data and methods
+
+* Corpus of American Historical English (COHA)
+    * ca. 400 million words
+    * different genres (_fic_, _mag_, _news_, _nf_)
+    * covering the years 1810-2009
+* A supervised classification
+    * Nearest Shrunken Centroids classifier
+    * 1,000 most frequent words
+
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+abline(v = 1900, col = my.blue)
+```
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+abline(v = 1900, col = my.blue)
+
+# drawing a rectangle, its width being 20 years
+rect(1875, -10, 1895, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+rect(1905, -10, 1925, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+
+# adding arrows to show the slice size
+arrows(1875, 30, 1895, 30, length=0.05, code=3)
+text(1885, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+arrows(1905, 30, 1925, 30, length=0.05, code=3)
+text(1915, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+
+text(1885, 40, paste("BEFORE"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+text(1915, 40, paste("AFTER"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+
+text(1868, 60, paste("500 samples\nrandomly selected"), cex=0.75, adj=c(1,0.5), col=my.teal)
+text(1932, 60, paste("500 samples\nrandomly selected"), cex=0.75, adj=c(0,0.5), col=my.teal)
+arrows(1870, 60, 1885, 50, length=0.05, code=2, col=my.teal)
+arrows(1930, 60, 1915, 50, length=0.05, code=2, col=my.teal)
+
+
+```
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+
+# drawing a rectangle, its width being 20 years
+rect(1875, -10, 1895, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+rect(1905, -10, 1925, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+
+# adding arrows to show the slice size
+#arrows(1875, 30, 1895, 30, length=0.05, code=3)
+#text(1885, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+#arrows(1905, 30, 1925, 30, length=0.05, code=3)
+#text(1915, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+
+text(1885, 40, paste("BEFORE"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+text(1915, 40, paste("AFTER"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+```
+
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+abline(v = 1902, col = my.blue)
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+```
+
+
+
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+abline(v = 1902, col = my.blue)
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+
+# drawing a rectangle, its width being 20 years
+rect(1877, -10, 1897, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+rect(1907, -10, 1927, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+
+text(1887, 40, paste("BEFORE"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+text(1917, 40, paste("AFTER"), cex=0.75, adj=c(0.5,0.5), col = my.red)
+
+# adding arrows to show the slice size
+#arrows(1877, 30, 1897, 30, length=0.05, code=3)
+#text(1887, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+#arrows(1907, 30, 1927, 30, length=0.05, code=3)
+#text(1917, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+```
+
+
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+
+# drawing a rectangle, its width being 20 years
+#rect(1877, -10, 1897, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+#rect(1907, -10, 1927, 110, border = NA, col=rgb(0.4,0.4,0.4,0.3))
+
+# adding arrows to show the slice size
+#arrows(1877, 30, 1897, 30, length=0.05, code=3)
+#text(1887, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+#arrows(1907, 30, 1927, 30, length=0.05, code=3)
+#text(1917, 25, paste("20 years"), cex=0.75, adj=c(0.5,0.5))
+
+points(1902, results.mean[names(results.mean) == 1902], col=rgb(0,0,1,0.6), lwd=2)
+segments(1902, results.mean[names(results.mean) == 1902] - results.sd[names(results.sd) == 1902],
+         1902, results.mean[names(results.mean) == 1902] + results.sd[names(results.sd) == 1902],
+         col=rgb(0,0,1,0.6) )
+```
+
+
+
+
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+
+points(1902, results.mean[names(results.mean) == 1902], col=rgb(0,0,1,0.6), lwd=2)
+segments(1902, results.mean[names(results.mean) == 1902] - results.sd[names(results.sd) == 1902],
+         1902, results.mean[names(results.mean) == 1902] + results.sd[names(results.sd) == 1902],
+         col=rgb(0,0,1,0.6) )
+
+points(1904, results.mean[names(results.mean) == 1904], col=rgb(0,0,1,0.6), lwd=2)
+segments(1904, results.mean[names(results.mean) == 1904] - results.sd[names(results.sd) == 1904],
+         1904, results.mean[names(results.mean) == 1904] + results.sd[names(results.sd) == 1904],
+         col=rgb(0,0,1,0.6) )
+```
+
+
+
+## Procedure
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+
+points(1900, results.mean[names(results.mean) == 1900], col=rgb(0,0,1,0.6), lwd=2)
+segments(1900, results.mean[names(results.mean) == 1900] - results.sd[names(results.sd) == 1900],
+         1900, results.mean[names(results.mean) == 1900] + results.sd[names(results.sd) == 1900],
+         col=rgb(0,0,1,0.6) )
+
+points(1902, results.mean[names(results.mean) == 1902], col=rgb(0,0,1,0.6), lwd=2)
+segments(1902, results.mean[names(results.mean) == 1902] - results.sd[names(results.sd) == 1902],
+         1902, results.mean[names(results.mean) == 1902] + results.sd[names(results.sd) == 1902],
+         col=rgb(0,0,1,0.6) )
+
+points(1904, results.mean[names(results.mean) == 1904], col=rgb(0,0,1,0.6), lwd=2)
+segments(1904, results.mean[names(results.mean) == 1904] - results.sd[names(results.sd) == 1904],
+         1904, results.mean[names(results.mean) == 1904] + results.sd[names(results.sd) == 1904],
+         col=rgb(0,0,1,0.6) )
+
+points(1906, results.mean[names(results.mean) == 1906], col=rgb(0,0,1,0.6), lwd=2)
+segments(1906, results.mean[names(results.mean) == 1906] - results.sd[names(results.sd) == 1906],
+         1906, results.mean[names(results.mean) == 1906] + results.sd[names(results.sd) == 1906],
+         col=rgb(0,0,1,0.6) )
+```
+
+
+
+
+
+
+
+## Accuracy
+
+```{r, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+results.mean.400 = sapply(current.aut.results, function(x) apply(x, 2, mean))[2,]
+results.mean.700 = sapply(current.aut.results, function(x) apply(x, 2, mean))[3,]
+results.mean.1000 = sapply(current.aut.results, function(x) apply(x, 2, mean))[4,]
+
+#png(filename = "coha_sequentially.png", width = 8, height = 6, res = 300, units = "in")
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+# adding vertical lines reaching -sd and +sd
+segments(breakpoint.dates, results.mean-results.sd, 
+         breakpoint.dates, results.mean+results.sd, 
+         col=rgb(0,0,1,0.6))
+# a baseline of 50% accuracy
+abline(h=50, lty=2, col="grey")
+text(1970,50, labels = "baseline", pos = 3, cex = 0.6)
+# a linear model showing the change
+#abline(lm(results.mean ~ breakpoint.dates), col=rgb(1,0,0,0.6))
+points(results.mean ~ breakpoint.dates, col=rgb(0,0,1,0.6), lwd=2)
+```
+
+
+
+
+
+## Why does the change periodically accelerate?
+
+* A **naive assumption** that the change can be linked to particular events in history and/or culture.
+* However, the impact of major historical breakthroughs on language **cannot be ruled out**.
+
+
+
+
+## Accuracy
+
+```{r NSC_accuracy, echo = FALSE, message = FALSE, fig.align = "center"}
+breakpoint.dates = as.numeric(names(current.aut.results))
+
+results.mean = sapply(current.aut.results, function(x) apply(x, 2, mean))[1,]
+results.sd = sapply(current.aut.results, function(x) apply(x, 2, sd))[1,]
+
+results.mean.400 = sapply(current.aut.results, function(x) apply(x, 2, mean))[2,]
+results.mean.700 = sapply(current.aut.results, function(x) apply(x, 2, mean))[3,]
+results.mean.1000 = sapply(current.aut.results, function(x) apply(x, 2, mean))[4,]
+
+#png(filename = "coha_sequentially.png", width = 8, height = 6, res = 300, units = "in")
+
+plot(results.mean ~ breakpoint.dates, ylim=c(0,100), type="n", xlab = "year", ylab = "classification accuracy [%]")
+# adding vertical lines reaching -sd and +sd
+segments(breakpoint.dates, results.mean-results.sd, 
+         breakpoint.dates, results.mean+results.sd, 
+         col=rgb(0,0,1,0.6))
+# a baseline of 50% accuracy
+abline(h=50, lty=2, col="grey")
+text(1970,50, labels = "baseline", pos = 3, cex = 0.6)
+# a linear model showing the change
+#abline(lm(results.mean ~ breakpoint.dates), col=rgb(1,0,0,0.6))
+points(results.mean ~ breakpoint.dates, col=rgb(0,0,1,0.6), lwd=2)
+
+
+arrows(1865,100,1865,82, length = 0.1, col = "grey")
+text(1865,100, labels = "1865", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,100,1893,73, length = 0.1, col = "grey")
+text(1893,100, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1929,100,1929,80, length = 0.1, col = "grey")
+text(1929,100, labels = "1929", pos = 2, srt = 90, cex = 0.6)
+arrows(1972,100,1972,70, length = 0.1, col = "grey")
+text(1972,100, labels = "1972", pos = 2, srt = 90, cex = 0.6)
+```
+
+
+
+
+## 
+
+<h2 class="shout">Who’s responsible for the change?</h2>
+
+
+
+
+
+
+
+## Distinctive features
+
+
+```{r coha_features, echo = FALSE, message = FALSE, fig.align = "center"}
+
+threshold = 0.001
+
+word = "you"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+
+u = 0
+for( i in  words ) {
+
+    word = i
+    current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+
+    # assigning 0 to the non-existent values
+    current.word[is.na(current.word)] = 0
+    # applying a smoother
+    current.word.smoother = lowess(current.word, f=1/5)$y
+    if(sum(abs(current.word.smoother)) > threshold ) {
+        lines(current.word.smoother ~ c(1835:1984), pch=20, col = rgb(0.8,0.2,0,0.2), lwd=3 )
+        u = u + 1
+    }
+}
+lines((results.mean/200)-0.1 ~ breakpoint.dates, col=rgb(0,0,1,0.6), lwd=5)
+```
+
+
+
+
+
+## Distinctive features: the biggest variation
+
+
+```{r coha_features1, echo = FALSE, message = FALSE, fig.align = "center"}
+
+threshold = 2
+
+word = "you"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,0.3,1893,0.14, length = 0.1, col = "grey")
+text(1893,0.3, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1920,0.3,1920,0.26, length = 0.1, col = "grey")
+text(1920,0.3, labels = "1920", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+u = 0
+for( i in  words ) {
+
+    word = i
+    current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+
+    # assigning 0 to the non-existent values
+    current.word[is.na(current.word)] = 0
+    # applying a smoother
+    current.word.smoother = lowess(current.word, f=1/5)$y
+    if(sum(abs(current.word.smoother)) > threshold ) {
+        lines(current.word.smoother ~ c(1835:1984), pch=20, col = rgb(0.8,0.2,0,0.2), lwd=3 )
+        u = u + 1
+    }
+}
+
+#lines(results.mean/300 ~ breakpoint.dates, col=rgb(0,0,1,0.6), lwd=5)
+```
+
+
+
+
+## So, which words are they?
+
+``` {r echo = FALSE, message = TRUE}
+threshold = 2
+u = 0
+disctinctive_words = c()
+for( i in  words ) {
+
+    word = i
+    current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+
+    # assigning 0 to the non-existent values
+    current.word[is.na(current.word)] = 0
+    # applying a smoother
+    current.word.smoother = lowess(current.word, f=1/5)$y
+    if(sum(abs(current.word.smoother)) > threshold ) {
+        u = u + 1
+        disctinctive_words = c(disctinctive_words, word)
+    }
+}
+print(disctinctive_words)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Words that matter
+
+```{r echo = FALSE, message = FALSE, fig.align = "center"}
+word = "week"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,0.3,1893,0.14, length = 0.1, col = "grey")
+text(1893,0.3, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1920,0.3,1920,0.26, length = 0.1, col = "grey")
+text(1920,0.3, labels = "1920", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+
+
+legend("bottomleft", legend = c("week", "president", "united", "party", "new", "york", "army"),
+    col = c(my.green, my.violet, my.red, my.teal, my.orange, my.blue, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+
+## Words that matter
+
+```{r echo = FALSE, message = FALSE, fig.align = "center"}
+word = "week"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,0.3,1893,0.14, length = 0.1, col = "grey")
+text(1893,0.3, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1920,0.3,1920,0.26, length = 0.1, col = "grey")
+text(1920,0.3, labels = "1920", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+word = "president"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.violet, lwd=3 )
+
+word = "united"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.red, lwd=3 )
+
+word = "party"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.teal, lwd=3 )
+
+
+legend("bottomleft", legend = c("week", "president", "united", "party", "new", "york", "army"),
+    col = c(my.green, my.violet, my.red, my.teal, my.orange, my.blue, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+
+
+## Words that matter
+
+```{r echo = FALSE, message = FALSE, fig.align = "center"}
+word = "week"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,0.3,1893,0.14, length = 0.1, col = "grey")
+text(1893,0.3, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1920,0.3,1920,0.26, length = 0.1, col = "grey")
+text(1920,0.3, labels = "1920", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+word = "president"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.violet, lwd=3 )
+
+word = "united"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.red, lwd=3 )
+
+word = "party"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.teal, lwd=3 )
+
+word = "new"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.orange, lwd=3 )
+
+
+legend("bottomleft", legend = c("week", "president", "united", "party", "new", "york", "army"),
+    col = c(my.green, my.violet, my.red, my.teal, my.orange, my.blue, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+
+
+## Words that matter
+
+```{r echo = FALSE, message = FALSE, fig.align = "center"}
+word = "week"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1893,0.3,1893,0.14, length = 0.1, col = "grey")
+text(1893,0.3, labels = "1893", pos = 2, srt = 90, cex = 0.6)
+arrows(1920,0.3,1920,0.26, length = 0.1, col = "grey")
+text(1920,0.3, labels = "1920", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+word = "president"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.violet, lwd=3 )
+
+word = "united"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.red, lwd=3 )
+
+word = "party"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.teal, lwd=3 )
+
+word = "new"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.orange, lwd=3 )
+
+word = "york"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.blue, lwd=3 )
+
+word = "army"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.grey, lwd=3 )
+
+legend("bottomleft", legend = c("week", "president", "united", "party", "new", "york", "army"),
+    col = c(my.green, my.violet, my.red, my.teal, my.orange, my.blue, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+
+## 
+
+<h2 class="shout">So, which words made history?</h2>
+
+
+
+
+
+## Function words
+
+```{r funciton_words, echo = FALSE, message = FALSE, fig.align = "center"}
+word = "and"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.2, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1918,0.3,1918,-0.03, length = 0.1, col = "grey")
+text(1918,0.3, labels = "1918", pos = 2, srt = 90, cex = 0.6)
+arrows(1929,0.3,1929,0.24, length = 0.1, col = "grey")
+text(1929,0.3, labels = "1929", pos = 2, srt = 90, cex = 0.6)
+arrows(1955,0.3,1955,0.1, length = 0.1, col = "grey")
+text(1955,0.3, labels = "1955", pos = 2, srt = 90, cex = 0.6)
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+word = "that"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.violet, lwd=3 )
+
+word = "is"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.red, lwd=3 )
+
+word = "been"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.teal, lwd=3 )
+
+word = "not"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.orange, lwd=3 )
+
+word = "the"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.blue, lwd=3 )
+
+word = "'s"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.grey, lwd=3 )
+
+legend("bottomleft", legend = c("and", "that", "is", "been", "not", "the", "'s"),
+    col = c(my.green, my.violet, my.red, my.teal, my.orange, my.blue, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+## Words cannot simply "disappear"
+
+```{r echo = FALSE, message = FALSE, fig.align = "center"}
+word = "of"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1929,0.3,1929,0.24, length = 0.1, col = "grey")
+text(1929,0.3, labels = "1929", pos = 2, srt = 90, cex = 0.6)
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+
+word = "'s"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.grey, lwd=3 )
+
+legend("bottomleft", legend = c("of", "'s"),
+    col = c(my.green, my.grey), 
+    lwd = 3, bty = "n")
+
+```
+
+
+
+
+
+
+
+
+## Personal pronouns ("social" words)
+
+
+```{r pers_pronouns, echo = FALSE, message = FALSE, fig.align = "center"}
+word = "you"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+plot(current.word ~ c(1835:1984), ylim=c(-.3,.3), type = "n", xlab = "year", ylab = "discrimination strength")
+
+arrows(1871,0.3,1871,0.01, length = 0.1, col = "grey")
+text(1871,0.3, labels = "1871", pos = 2, srt = 90, cex = 0.6)
+arrows(1925,0.3,1925,0.01, length = 0.1, col = "grey")
+text(1925,0.3, labels = "1925", pos = 2, srt = 90, cex = 0.6)
+arrows(1959,0.3,1959,0.05, length = 0.1, col = "grey")
+text(1959,0.3, labels = "1959", pos = 2, srt = 90, cex = 0.6)
+
+abline(h = 0, lty=2, col = "grey")
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.blue, lwd=3 )
+
+word = "my"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.green, lwd=3 )
+
+word = "i"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.red, lwd=3 )
+
+word = "your"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.teal, lwd=3 )
+
+word = "we"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.grey, lwd=3 )
+
+word = "our"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.violet, lwd=3 )
+
+word = "n't"
+# extracting the values for a given word, as a function of time
+current.word = as.numeric(sapply(current.year.results, function(x) x[x[,2] == word, 4]))
+current.word[is.na(current.word)] = 0
+current.word.smoother = lowess(current.word, f=1/5)$y
+lines(current.word.smoother ~ c(1835:1984), pch=20, col = my.orange, lwd=3 )
+
+legend("bottomleft", legend = c("you", "my", "I", "your", "we", "our", "n't"),
+    col = c(my.blue, my.green, my.red, my.teal, my.grey, my.violet, my.orange), 
+    lwd = 3, bty = "n")
+
+```
+
+
+## 
+
+<img src="img/ngram_week.png" class="cover">
+
+
+## 
+
+<img src="img/ngram_you.png" class="cover">
+
+
+
+## 
+
+<img src="img/ngram_of.png" class="cover">
+
+
+
+
+
+## Conclusions
+
+* The language change seems to be a **fluctuation** of rapid and slow changes.
+* **Numerous features** responsible for the change, rather than few strong predictors.
+    * unexpectedly many **pronouns** among the predictors
+    * increasing power of "social" function words (personal pronouns)
+* Grand question: do we observe a **language** change, or a change in **style**? (e.g. a general taste of an epoch)
+
+
+## Thank you!
+
+* maciejeder@gmail.com
+* [\@MaciejEder](https://twitter.com/MaciejEder)
+* [https://github.com/computationalstylistics](https://github.com/computationalstylistics)
+
+
