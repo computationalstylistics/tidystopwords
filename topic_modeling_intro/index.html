@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Introduction to Distributional Semantics: (1) Topic Modeling</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="intro_to_topic_models_files/shower-ribbon/package/styles/screen-4x3.css">
+  <link rel="stylesheet" href="intro_to_topic_models_files/rmdshower/style-common.css">
+  <link rel="stylesheet" href="intro_to_topic_models_files/rmdshower/style-ribbon.css">
+  <link rel="stylesheet" href="intro_to_topic_models_files/shower-ribbon/style-override.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+  <script src="intro_to_topic_models_files/rmdshower/auto-render.min.js" type="text/javascript"></script>
+  
+  
+  
+  
+  
+</head>
+
+<body class="shower list">
+
+  <header class="caption">
+    <h1>Introduction to Distributional Semantics: (1) Topic Modeling</h1>
+    <p>Maciej Eder</p>
+  </header>
+
+  
+  
+<section id="section" class="slide level2 white">
+<h2></h2>
+<p class="black" style="font-size: 180%">
+<b>Introduction to Distributional Semantics</b> </br> <b>(1) Topic Modeling</b>
+</p>
+<p class="black" style="font-size: 120%">
+Maciej Eder
+</p>
+<p class="black" style="font-size: 80%; margin-bottom: 10em;">
+Institute of Polish Language (Polish Academy of Sciences)
+</p>
+<p class="black">
+IQLA-GIAT Summer School, Padova, 14.09.2019
+</p>
+</section>
+<section id="motivation" class="slide level2">
+<h2>Motivation</h2>
+<ul>
+<li>Information retrieval:
+<ul>
+<li>How to “read” a big collection of documents, e.g. an archive?</li>
+<li>How to get relevant websites using search engines?</li>
+<li>How to fine-grain the results for ‘apple’ (1. a fruit, 2. a company)</li>
+</ul></li>
+<li>Linguistics:
+<ul>
+<li>What is the underlying model for defining word meaning?</li>
+</ul></li>
+</ul>
+</section>
+<section id="meaning-defined-by-the-context" class="slide level2">
+<h2>Meaning defined by the context</h2>
+<blockquote>
+<p>The meaning of words lies in their use.</p>
+</blockquote>
+<p>(Wittgenstein 1953: 80, 109)</p>
+<blockquote>
+<p>You shall know a word by the company it keeps.</p>
+</blockquote>
+<p>(Firth 1962: 11)</p>
+</section>
+<section id="distributional-semantics" class="slide level2">
+<h2>Distributional semantics</h2>
+<ul>
+<li>A set of methods that make <strong>no assumption</strong> as to words’ relations and/or functions</li>
+<li>Meaning of the words is <strong>inferred</strong> from their:
+<ul>
+<li>Frequency</li>
+<li>Context</li>
+</ul></li>
+<li>These methods include:
+<ul>
+<li>Keyword analysis</li>
+<li>Collocations</li>
+<li>Topic modeling</li>
+<li>Word embeddings</li>
+</ul></li>
+</ul>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+<h2 class="shout">
+Keywords
+</h2>
+</section>
+<section id="keywords-in-information-extraction" class="slide level2">
+<h2>Keywords in information extraction</h2>
+<ul>
+<li>Extracting the contents, by identifying the most <strong>meaningful</strong> words</li>
+<li>The goal is to compare a text against a corpus</li>
+<li>Keyword = a word significantly more frequent in a given text</li>
+</ul>
+</section>
+<section id="emily-bronte-the-wuthering-heights" class="slide level2">
+<h2>Emily Bronte, <em>The Wuthering Heights</em></h2>
+<p>heathcliff, linton, catherine, hareton, earnshaw, cathy, edgar, ellen, heights, hindley, nelly, ll, grange, i, wuthering, t, joseph, isabella, master, gimmerton, zillah, m, exclaimed, he, thrushcross, and, answered, yah, kenneth, ve, maister, lockwood, kitchen, you, dean, moors, replied, cried, him, muttered, lintons, papa, she, till, commenced, on, wer, ech, shoo, leant, hearth, bonny, door, stairs, hell, me, crags, moor, wouldn, fiend, settle, jabez, penistone, fire, ye, its, bid, nowt, naught, yer, hush, mistress, grew, lad, compelled, minny, won, hisseln, skulker, soa, wisht, cousin, lattice, didn, yon, minute, lass, needn, inquired, snow, branderham, flaysome, gooid, sud, thear, affirming, interrupted, couldn, window, …</p>
+</section>
+<section id="a-simple-idea" class="slide level2">
+<h2>A simple idea…</h2>
+<blockquote>
+<p>I have just returned from a visit to my landlord – the solitary neighbour that I shall be troubled with.</p>
+</blockquote>
+<p>neighbour solitary troubled landlord visit returned just shall from I have be with my that a to the</p>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-1-1.png" width="864" /></p>
+</section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<h2 class="shout">
+Collocations
+</h2>
+</section>
+<section id="collocations-in-corpus-linguistics" class="slide level2">
+<h2>Collocations in corpus linguistics</h2>
+<ul>
+<li>A collocation is a pair of words that co-occur more often than would be expected by chance.</li>
+<li>Typical collocations are idioms, as <em>hot potato</em>, and phrasal verbs.</li>
+<li>Word frequencies used to calculate co-occurence probabilities.</li>
+</ul>
+</section>
+<section id="word-frequencies-as-probabilities" class="slide level2">
+<h2>Word frequencies as probabilities</h2>
+<ul>
+<li>Probability of finding a word A in a corpus is <span class="math inline">\(P(A)\)</span></li>
+<li>Probability of finding a word B in a corpus is <span class="math inline">\(P(B)\)</span></li>
+<li>Probability of finding them together is <span class="math inline">\(P(A) \times P(B)\)</span></li>
+</ul>
+<p>An example: <span class="math display">\[ P(A) = 0.001 \quad\quad P(B) = 0.002 \quad\quad P(A) \times P(B) = 0.000002 \]</span></p>
+</section>
+<section id="collocations-in-corpus-linguistics-1" class="slide level2">
+<h2>Collocations in corpus linguistics</h2>
+<ul>
+<li>However, some words tend to ‘like’ each other…</li>
+<li>… despite their theoretical probabilities.</li>
+<li><em>Cf.</em>:</li>
+</ul>
+<p>strong tea — *powerful tea</p>
+<p>powerful computer — *strong computer</p>
+</section>
+<section id="section-3" class="slide level2">
+<h2></h2>
+<h2 class="shout">
+Topic modeling
+</h2>
+</section>
+<section id="whats-the-aim" class="slide level2">
+<h2>What’s the aim?</h2>
+<ul>
+<li>To discover hidden thematic structure in large collections of texts…</li>
+<li>… without any prior knowledge about word meanings or grammar.</li>
+</ul>
+</section>
+<section id="assumptions" class="slide level2">
+<h2>Assumptions</h2>
+<ul>
+<li>Certain words tend to occur more frequently in a text covering a given topic than in other texts.</li>
+<li>Texts are usually about many topics.</li>
+<li>A topic is a recurring pattern of co-occurring words.</li>
+</ul>
+</section>
+<section id="what-is-a-topic" class="slide level2">
+<h2>What is a topic?</h2>
+<blockquote>
+<p>We formally define a topic to be a distribution over a fixed vocabulary. For example, the <em>genetics</em> topic has words about genetics with high probability and the evolutionary biology topic has words about <em>evolutionary biology</em> with high probability.</p>
+</blockquote>
+<p>(Blei 2012, 78)</p>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<p><img src="img_and_data/lda_blei_1.png" class="cover"></p>
+</section>
+<section id="latent-dirichlet-allocation-lda" class="slide level2">
+<h2>Latent Dirichlet Allocation (LDA)</h2>
+<ul>
+<li>Each <strong>topic</strong> is a distribution over words</li>
+<li>Each <strong>document</strong> is a mixture of corpus-wide topics</li>
+<li>Each <strong>word</strong> is drawn from one of those topics</li>
+</ul>
+</section>
+<section id="latent-dirichlet-allocation-lda-1" class="slide level2">
+<h2>Latent Dirichlet Allocation (LDA)</h2>
+<ul>
+<li>in reality, we only observe the documents</li>
+<li>the other structure are <strong>hidden variables</strong></li>
+<li>the goal is <strong>to infer</strong> the hidden variables</li>
+</ul>
+</section>
+<section id="section-5" class="slide level2">
+<h2></h2>
+<p><img src="img_and_data/lda_blei_2.png" class="cover"></p>
+</section>
+<section id="assumptions-cont." class="slide level2">
+<h2>Assumptions (cont.)</h2>
+<ul>
+<li>The order of words is not relevant (“bag of words”)</li>
+<li>The order of documents is not relevant</li>
+<li>The number of topics is fixed and known in advance</li>
+</ul>
+</section>
+<section id="a-topic-50-top-words" class="slide level2">
+<h2>A topic (50 top words)</h2>
+<p>fight soldier arms war soldiers field fly sword horse valiant march battle brave messenger arm army trumpet valour kings camp alarum walls join wars slain tent forces gates drum courage trumpets lion town fought foes english armour city saint guard colours victory herald swords fame armed country wounds plain safe …</p>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-2-1.png" width="864" /></p>
+</section>
+<section id="section-6" class="slide level2">
+<h2></h2>
+<h2 class="shout">
+Shakespeare
+</h2>
+</section>
+<section id="topics-in-the-shakespearean-canon" class="slide level2">
+<h2>Topics in the Shakespearean canon</h2>
+<ul>
+<li>a corpus of 42 texts by Shakespeare…</li>
+<li>… sliced into samples of 1000 words each</li>
+<li>topic model inferred:
+<ul>
+<li>LDA algorithm</li>
+<li>25 topics</li>
+<li>excluded speakers’ names</li>
+<li>excluded common stop words</li>
+<li>topics visualized using wordclouds</li>
+</ul></li>
+</ul>
+</section>
+<section id="fights-swords-topic-6" class="slide level2">
+<h2>Fights &amp; swords (topic 6)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-3-1.png" width="864" /></p>
+</section>
+<section id="family-relations-topic-21" class="slide level2">
+<h2>Family relations (topic 21)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-4-1.png" width="864" /></p>
+</section>
+<section id="tears-sorrow-topic-24" class="slide level2">
+<h2>Tears &amp; sorrow (topic 24)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-5-1.png" width="864" /></p>
+</section>
+<section id="night-sleep-topic-23" class="slide level2">
+<h2>Night &amp; sleep (topic 23)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-6-1.png" width="864" /></p>
+</section>
+<section id="face-kisses-topic-8" class="slide level2">
+<h2>Face &amp; kisses (topic 8)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-7-1.png" width="864" /></p>
+</section>
+<section id="love-topic-5" class="slide level2">
+<h2>Love (topic 5)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-8-1.png" width="864" /></p>
+</section>
+<section id="the-elements-topic-10" class="slide level2">
+<h2>The elements (topic 10)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-9-1.png" width="864" /></p>
+</section>
+<section id="people-topic-15" class="slide level2">
+<h2>People? (topic 15)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-10-1.png" width="864" /></p>
+</section>
+<section id="a-mixture-of-everything-topic-17" class="slide level2">
+<h2>A mixture of everything? (topic 17)</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-11-1.png" width="864" /></p>
+</section>
+<section id="how-to-interpret-topics" class="slide level2">
+<h2>How to interpret topics?</h2>
+<blockquote>
+<p>Indeed calling these models “topic models” is retrospective – the topics that emerge from the inference algorithm are interpretable for almost any collection that is analyzed. The fact that these look like topics has to do with the statistical structure of observed language and how it interacts with the specific probabilistic assumptions of LDA.</p>
+</blockquote>
+<p>(Blei 2012, 79)</p>
+</section>
+<section id="topics-in-documents" class="slide level2">
+<h2>Topics in documents</h2>
+<ul>
+<li>Each document contains (many) topics.</li>
+<li>The proportions of these topics can be plotted.</li>
+</ul>
+</section>
+<section id="the-climax-of-romeo-and-juliet" class="slide level2">
+<h2>The climax of <em>Romeo and Juliet</em></h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-12-1.png" width="864" /></p>
+</section>
+<section id="the-beginnig-of-the-tempest" class="slide level2">
+<h2>The beginnig of <em>The Tempest</em></h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-13-1.png" width="864" /></p>
+</section>
+<section id="a-midsummer-nights-dream" class="slide level2">
+<h2><em>A Midsummer Night’s Dream</em></h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-14-1.png" width="864" /></p>
+</section>
+<section id="topics-vs.genres" class="slide level2">
+<h2>Topics vs. genres</h2>
+<ul>
+<li>Proportions of topics can be used as features in machine learning.</li>
+<li>Will the topic structure corroborate the traditional division into Shakespearean genres?
+<ul>
+<li>red: comedies</li>
+<li>orange: tragedies</li>
+<li>green: histories</li>
+<li>black: romances</li>
+<li>blue: poetry</li>
+</ul></li>
+</ul>
+</section>
+<section id="topics-vs.genres-cluster-analysis" class="slide level2">
+<h2>Topics vs. genres – cluster analysis</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-15-1.png" width="864" /></p>
+</section>
+<section id="topics-vs.genres-pca" class="slide level2">
+<h2>Topics vs. genres – PCA</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-16-1.png" width="864" /></p>
+</section>
+<section id="topics-vs.genres-pca-1" class="slide level2">
+<h2>Topics vs. genres – PCA</h2>
+<p><img src="intro_to_topic_models_files/figure-revealjs/unnamed-chunk-17-1.png" width="864" /></p>
+</section>
+<section id="topics-vs.genres-1" class="slide level2">
+<h2>Topics vs. genres</h2>
+<p><img src="img_and_data/topics_in_docs.png" class="cover"></p>
+</section>
+<section id="titus-andronicus" class="slide level2">
+<h2><em>Titus Andronicus</em></h2>
+<p><img src="img_and_data/topics_titus.png" class="cover"></p>
+</section>
+<section id="the-tempest" class="slide level2">
+<h2><em>The Tempest</em></h2>
+<p><img src="img_and_data/topics_tempest.png" class="cover"></p>
+</section>
+<section id="hamlet" class="slide level2">
+<h2><em>Hamlet</em></h2>
+<p><img src="img_and_data/topics_hamlet.png" class="cover"></p>
+</section>
+<section id="implementations" class="slide level2">
+<h2>Implementations</h2>
+<ul>
+<li><a href="http://mallet.cs.umass.edu/">Mallet</a> (Java)</li>
+<li><a href="https://nlp.stanford.edu/software/tmt/tmt-0.4/">Stanford Topic Modeling Toolbox</a> (Java)</li>
+<li><a href="https://radimrehurek.com/gensim/">gensim</a> (Python)</li>
+<li><a href="https://github.com/lda-project/lda">lda</a> (Python)</li>
+<li><a href="https://cran.r-project.org/web/packages/topicmodels/index.html">topicmodels</a> (R)</li>
+<li><a href="https://cran.r-project.org/web/packages/mallet/index.html">Mallet invoked from R</a> (R + Java)</li>
+<li><a href="https://dariah-de.github.io/TopicsExplorer/"><strong>DARIAH Topic Explorer</strong></a> (standalone)</li>
+</ul>
+</section>
+
+  <!--
+  To hide progress bar from entire presentation
+  just remove “progress” element.
+  -->
+  <!-- <div class="progress"></div> -->
+  <script src="intro_to_topic_models_files/rmdshower/node_modules/shower/node_modules/shower-core/shower.min.js"></script>
+  <!-- Copyright © 2015 Yours Truly, Famous Inc. -->
+  <!-- Photos by John Carey, fiftyfootshadows.net -->
+
+    <script>renderMathInElement(document.body);</script>
+  
+  
+</body>
+</html>
