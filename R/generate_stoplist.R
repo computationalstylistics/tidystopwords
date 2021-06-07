@@ -2,7 +2,7 @@
 
 generate_stoplist <- function(lang_name = NULL, 
                               lang_id = NULL,
-                              output_form = "vector",
+                              output_form = c("vector", "data.frame"),
                               stop_lemmas = NULL,
                               stop_forms = NULL,
                               stop_foreign_words = TRUE, 
@@ -489,5 +489,6 @@ stoplist_db <- multilingual_stoplist %>%
 #                   custom_filter = "lemma == 'und' & language_name == 'German'", 
 #                   output_form = "data.frame")
 
-
-
+generate_stoplist(lang_name = "Greek",  stop_punctuation_crosslingual = FALSE, 
+                  stop_symbols_crosslingual = FALSE)
+list_supported_language_names()
