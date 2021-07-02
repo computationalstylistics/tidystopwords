@@ -21,7 +21,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-This vignette explains basic functionalities of the package `tidystopwords`. The idea behind this package is to give the user control over the stopword selection, which is one of the most important steps in any text-mining analysis. Since the following examples involve the very useful `%>%` operator, you need to activate the `dplyr` package, let alone `tidystopwords` (the order of activating them doesn’t matter):
+This vignette explains basic functionalities of the package `tidystopwords`. 
+`tidystopwords` gives you potential stopwords in more than 100 languages. 
+Where do these words come from? They were automatically extracted from 
+These were extracted from the  
+
+
+
+
+The idea behind this package is to give the user control over the stopword selection, which is one of the most important steps in any text-mining analysis. Since the following examples involve the very useful `%>%` operator, you need to activate the `dplyr` package, let alone `tidystopwords` (the order of activating them doesn’t matter):
 
 ```{r message = FALSE, warning = FALSE}
 library(dplyr)
