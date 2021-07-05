@@ -11,96 +11,27 @@ to toggle different parts of speech as well as to add new words.
 
 }
 \usage{
-generate_stoplist(lang_name = NULL, 
-                  lang_id = NULL,
-                  output_form = "vector",
-                  stop_lemmas = NULL,
-                  stop_forms = NULL,
-                  stop_foreign_words = TRUE, 
-                  stop_abbreviations = TRUE,
-                  stop_pronominals = TRUE,
-                  stop_determiners_quantifiers = TRUE,
-                  stop_conjuctions = TRUE, 
-                  stop_adpositions = TRUE,
-                  stop_subordinating_conjunctions = TRUE,
-                  stop_auxiliary_verbs = TRUE,
-                  stop_interjections = TRUE,
-                  stop_particles = TRUE,
-                  stop_numerals = TRUE,
-                  stop_symbols_crosslingual = TRUE,
-                  stop_punctuation_crosslingual = TRUE,
-                  custom_filter = NULL )
+generate_stoplist(language = NULL, output_form = 1)
 }
 
 \arguments{
-\item{lang_name}{single string or a character vector. \code{NULL} by default. 
-However, when both \code{lang_name} and \code{lang_id} are \code{NULL}, the 
-function returns a vector of all word forms in all languages.}
+\item{language}{single string or a character vector. \code{NULL} by default. 
+The strings can be language names or ISO-639 language codes as listed by the \code{list_supported_languages()}, freely combined. When no recognized language is recognized, this error message appears: \code{"The language name or language id you have selected is not supported. Check out the supported languages by calling 
+`list_supported_languages`.\n"}. 
 
-\item{lang_id}{a single string or a character vector. Call \code{list_supported_language_ids()} to see the supported ISO-639 language codes, if you prefer these codes to language names.}
+\item{output_form}{default \code{1}, alternatively \code{2} or \code{3}.}
+	Option \code{1} returns a character vector of alphabetically sorted unique stopwords word forms. 
+	Option \code{2} returns a named vector whose elements are the stopwords word forms and names are the associated stop classes. One word form can occur with different stop classes; hence the word forms in this vector are not unique, unlike Option \code{1}. 
+	Option \code{3} returns a data frame filtered according to the language selection. 
 
-\item{output_form}{default \code{"vector"}, alternatively \code{"data.frame"}.}
-
-\item{stop_lemmas}{default \code{NULL}. Supply a string or a character vector. You get all word forms of each listed lemma found in the data set for your selected language(s). POS disambiguation is not possible with this argument: mind homonyms.}
-
-\item{stop_forms}{default \code{NULL}. Supply a string or a character vector. You get all word forms present in the data set for your selected language(s). POS disambiguation is not possible with this argument: mind homonyms. 
-    
-The following parameters extract word forms from the data set with the relevant linguistic markup for your selected languages(s). It is often a combination of the coarse-grained universal POS tag and a set of so-called Universal Features. The same set of filters are used across all languages.}
-
-\item{stop_foreign_words}{default \code{TRUE}.}
-
-\item{stop_abbreviations}{default \code{TRUE}.}
-
-\item{stop_pronominals}{default \code{TRUE}. All pronouns (e.g. "me", "this",
-"what") along with pronominal adjectives and adverbs (e.g. "whose", "where").}
-
-\item{stop_determiners_quantifiers}{default \code{TRUE}. Articles, 
-possessive pronouns, quantifiers (e.g. "all", "few", "both").}
-
-\item{stop_conjuctions}{default \code{TRUE}. Coordinating conjunctions; e.g. 
-"and", "but".}
-
-\item{stop_adpositions}{default \code{TRUE}. Prepositions and postpositions; 
-e.g. "of", "instead", "ago".}
-
-\item{stop_subordinating_conjunctions}{default \code{TRUE}. E.g. "because".}
-
-\item{stop_auxiliary_verbs}{default \code{TRUE}. E.g. "have", "be". 
-Many languages mark also modal verbs ("must", "can") as auxiliary verbs, 
-but some (e.g. Czech) do not. Check the UD documentation for your language
-of interest. Also, mind that when adding e.g. "have" to your stop-word vector, 
-you are also going to get rid of all its lexical uses; e.g. in "I have two cars."}
-                             
-\item{stop_interjections}{default \code{TRUE}. Exclamatory words; e.g. "wow",
-"ouch", but also "yes". Here the individual languages differ very much.}
-
-\item{stop_particles}{default \code{TRUE}. Also a very heterogeneous class. 
-Check what is in there for your language of interest. NB: the English particles 
-in phrasal verbs are regarded as adpositions, not as particles.} 
-
-\item{stop_numerals}{default \code{TRUE}. Words denoting numbers: cardinal and ordinal numerals, as well as words that many languages normally regard as adjectives or adverbs; e.g. "double", "fourfold".}
-
-\item{stop_symbols_crosslingual}{default \code{TRUE}. All symbols (e.g. emoji or currencies) harvested across all languages.}
-
-\item{stop_punctuation_crosslingual}{default \code{TRUE}. All punctuation marks harvested across all languages.}
-
-\item{custom_filter}{default \code{NULL}. If you are not happy with the 
-predefined stopword specifications, you can write your own filter for the 
-underlying data set. Insert an evaluating expression in quotes. It will be 
-parsed in \code{dplyr::filter(multilingual_stoplist,} your expression\code{)}. 
-If you want to use the full power of \code{dplyr}, e.g. grouping, use 
-the \code{multilingual_stoplist} data set on its own. 
-This argument works independently of the pre-defined filters. 
-Mind to turn them off if you do not want them. This filter also helps you 
-override the pre-defined language choice, should you wish to.}
-}
 
 
 %\details{
-%The data frame has the following columns:
+%The underlying data frame has the following columns:
 %\enumerate{
-%\item \code{word_form}: word forms as they are. 
-%\item  \code{POS}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
+%\item \code{word_form}: word forms in lower case. 
+%\item \code{lemma}
+%\item  \code{lemma}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
 %\item \code{UFeat}: Universal Features - complementary information to the universal part of speech tags. 
 %\item \code{refcorpus} column contains the corpus ID. We have tried to gather as large a data set for each language as possible, so we combined corpora across several releases of Universal dependencies. For instance the Latin stopwords come from three different corpora: ud_la_, ud_la_itt_, and ud_la_proiel_.   
 %\item \code{language}: language ids.
