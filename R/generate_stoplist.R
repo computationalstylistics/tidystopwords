@@ -1,9 +1,11 @@
+library(dplyr)
+#library(readr)
+#library(tidyr)
+#library(magrittr)
+#library(purrr)
 
-
-generate_stoplist <- function(lang_name = NULL, 
-                              lang_id = NULL,
-                              output_form = c("unique_forms", 
-                                              "stopclass_namedvec", "data_frame")
+generate_stoplist_df <- function(language = NULL, 
+                              output_form = 1)
                               
                               {
 
@@ -13,32 +15,39 @@ generate_stoplist <- function(lang_name = NULL,
     #data("multilingual_stoplist", package = "tidystopwords", envir = environment()) 
     #multilingual_stoplist <- get("multilingual_stoplist", envir = environment()) 
     ######
-  ## 2021-05-24 this here is for the function tweaks, delete for the package
-  load(file = "stopwoRds/DATA/multilingual_stoplist.RData")
-  ##
-    
-  lang_name = multilingual_stoplist$lang_name
-    lang_id = multilingual_stoplist$lang_id
-    lemma = multilingual_stoplist$lemma
-    form = multilingual_stoplist$form
-    ufeat = multilingual_stoplist$ufeat
-    upos = multilingual_stoplist$POS
-    
 
+
+load(file = "../DATA/multilingual_stoplist.RData")  
+###    
+#multilingual_stoplist <- stpwrds3_df
+language_check <- filter(multilingual_stoplist, 
+                         lang_name %in% language |lang_id %in% language)   
+if (nrow(language_check) == 0) {
+  stop("The language name or language id you have selected is not supported. 
+       Check out the supported languages by calling 
+       `list_supported_languages`.\n", call. = FALSE )
+}
+ 
   #print(stoplist_vec)
-  if (output_form == "unique_forms"){
-    
-    return(stoplist_db)
-  } else if (output_form == "stopclass_namedvec")  {
-   
-    
-    
+  if (output_form == 3){
+        return(language_check)
+  } else if (output_form == 2)  {
+    stopclass_namedvec <- language_check %>% 
+      arrange(lang_name, stopclass, form) %>% 
+      distinct(lang_name, form, stopclass) %>% 
+      pull(form, name = "stopclass")
     return(stopclass_namedvec)
     } else {
-      
-      return(data_frame)
+    unique_forms <- language_check %>% 
+      arrange(lang_name, stopclass, form) %>% 
+      distinct(lang_name, form, stopclass) %>% 
+      pull(form)
+   
+     return(unique_forms)
     }
 
 }
 
-list_supported_language_names()
+
+
+
