@@ -10,335 +10,110 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-
-
-
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+# Functions and arguments
+The `tidystopwords` package gives you potential stopwords in more than 100 
+languages. Its main function is `generate_stoplist`. Its argument `language` 
+accepts atomic strings and character vectors of language names or language 
+abbreviations corresponding to those listed by the helping function 
+`list_supported_languages`.   
+
+The `list_supported_languages` function comes with three numbered output options. 
+
+-   Option `1` outputs a character vector of unique word forms.
+-   Option `2` outputs a named character vector of word forms. The names denote 
+`stop classes` roughly corresponding to parts of speech. Note that, in this 
+output, the word forms are not unique. For instance, in English stopwords, *that*
+would occur as a subordinating conjunction as well as as a pronoun.  
+- Option `3` (the default) outputs a data frame, where each row represents a combination 
+of language (columns `lang_name` and `lang_id`), word form and word lemma 
+(columns `form` and `lemma`), and several other columns explained below.    
 
 
-This vignette explains basic functionalities of the package `tidystopwords`. 
-`tidystopwords` gives you potential stopwords in more than 100 languages. 
-Where do these words come from? They were automatically extracted from 
-These were extracted from the  
+# Definition of stopwords
+The `list_supported_languages` output is based on `multilingual_stoplist` - a 
+data frame that was automatically extracted from the
+[Universal Dependencies treebanks](http://universaldependencies.org/) 
+(henceforth UD).  Universal Dependencies is a framework for cross-linguistically
+consistent grammatical annotation. The `tidystopwords` package uses their 
+lemmatization, *universal parts of speech*, and *universal features* to derive 
+an inventory of *stop classes*:
+
+- `abbreviation` (e.g. *e.g., cf., etc*);
+- `adposition` (preposition or postposition e.g. *in* and *ago*);
+- `auxiliary verb` (e.g. *been, have, must*);
+- `conjunction_subordinator` (e.g. *and*, *because*);
+- `contraction` (e.g. *'nt*);
+- `determiner_quantifier` (e.g. *third*, *which*, *both*);
+- `interjection` (e.g. *yes* );
+- `particle` (e.g. *off* in *take off* )
+- `pronominal` (functional words that act as nouns - e.g., *him*, *it*. Pronouns
+acting as adjectives (*your*) and pronominal adverbs (*where*) are covered by 
+the `determiner_quantifier` stop class.)
 
 
+In terms of the Universal Dependencies, the stop classes are defined as follows: 
 
+- `abbreviation`: `ufeat` contains `Abbr=Yes` and upos does not equal `NOUN` or 
+`ADJ`;
+- `adposition`: `upos` equals `AVP`;
+- `auxiliary verb`: `upos` equals `AUX`;
+- `conjunction_subordinator`: `upos` equals `CONJ` or `SCONJ`;
+- `contraction`: neither `form` nor `lemma` equal `_`, `upos` equals `_` and the 
+form has occurred more than twice in the corpus;
+- `determiner_quantifier`: either `upos` equals `DET` or `ufeat` contains 
+`PronType` and at least one of the following strings: `NumType`, 
+`Ind`, `Dem`, `Int`, `Rel`, `Tot`, `Neg`; 
+- `interjection`: `upos` equals `INTJ`;
+- `particle`: `upos` equals `PART`;
+- `pronominal`: `upos` equals `PRON` with no restrictions to `ufeat` or 
+`ufeat` contains `PronType` but then `upos` does not equal `DET`. 
 
-The idea behind this package is to give the user control over the stopword selection, which is one of the most important steps in any text-mining analysis. Since the following examples involve the very useful `%>%` operator, you need to activate the `dplyr` package, let alone `tidystopwords` (the order of activating them doesn’t matter):
-
-```{r message = FALSE, warning = FALSE}
-library(dplyr)
-library(tidystopwords)
-```
-
-
-
-
-
-# Introduction
-
-When processing texts, you sometimes need to remove certain groups of unhelpful words; e.g. in topic modeling, you remove the so-called *function words*, aka  *auxiliary words*: prepositions, conjunctions, articles, etc. You use a *stoplist* or a *list of stop words*. 
-
-This package creates stoplists in many languages; it allows you to control which words your individual stoplist will contain, in a way consistent across all the supported languages.
-
-To make the output examples as crisp as possible, we run additional sampling and filters throughout this document. 
-
-
-# Which word classes you can control 
-
-The package lets you control the following word classes: 
-
- - __Foreign words__; e.g. *faux* and *pas* in *This was a terrible faux pas.*;  
-  
- - __Abbreviations__;  
  
- - __Pronominals__; e.g. *he, mine, her, it, which, where, how, when*. As the example suggests, this includes several subtypes of pronouns as well as pronominal adverbs;
- 
- - __Determiners__ and __Quantifiers__ are typically articles (*the, a, an*) and demonstrative pronouns (e.g. *that boy*), as well as *all, every, both*, or *none*;
- 
- - __Conjunctions__ are words that connect two clauses that could also stand separately; e.g. *and, or*;
- 
- - __Adpositions__ is an umbrella term for prepositions and postpositions. Prepositions (*in, for*)  are common in most languages; postpositions less so (*ago*);
- 
- - __Subordinating conjunctions__ are words that connect two clauses in a way that makes one clause syntactically subordinate to the other (*if, although*); 
- 
- - __Auxiliary verbs__ are typically the verbs *to be* and *to have* in complex verb forms (e.g. *John has been reading.*);
- 
- - __Interjections__ are words rendering diverse sounds (*meow*) and short formulaic expressions (*yes*, *hello*), often exclamative: *dammit*, *oh*.
- 
- - __Particles__: their definition is fairly language-specific, ranging from particles in English phrasal verbs (*take off*) to diverse sentence adverbials (*fortunately*);
- 
- - __Numerals__ are digits and words for numbers (*three*, *third*). 
- 
- 
-By default, the stop list will contain all of these categories, and you can switch off those that you do not want to stoplist in your documents. For instance, you might be particularly interested in quantifying expressions, and then you would like to keep the determiners and quantifiers as well as numerals, but you still want to get rid of all the other word classes. Then you would switch off the determiner-quantifier and numeral stoplisting. 
+# Vocabulary coverage
+Each version of this package uses the latest UD release available to generate the
+`multilingual_stoplist` data frame. Therefore `multilingual_stoplist` can differ
+from version to version. Typically, a new UD release brings bigger annotated
+corpora and emerging corpora of new languages. 
 
+All stopword lists in `tidystopwords` have been generated automatically from the 
+data available at the moment. Hence their quality depends on the size of the 
+underlying corpora as well as the morphological richness of the given language. 
 
+To allow the user to assess the reliability of the stopword list for the given 
+language, the `multilingual_stoplist` contains relevant frequency information 
+for each word form in three columns: `n_formlemma`, `n_uposlemma`, and  
+`n_stopclasses`.
 
-# How does the word-class control work?
+The `n_formlemma` column gives the absolute frequency of the given word form with the 
+ given lemma. The `n_uposformlemma` column gives the absolute frequency of the 
+ given word form with the given lemma and upos.  
 
-*If you have no linguistic background and just want to quickly get a stop-word list without much customization, feel free to skip this section.* 
+The `n_stopclasses` column says in how many stop classes the given word form with
+the given lemma occurs. For instance *that* occurs as `determiner_quantifier`
+ (*that pie tastes good*), `pronominal` (*don't mention that*), and
+ `conjunction_subordinator` (*say that you will do it*). 
 
 
+# Noise control
+Even high-quality reference corpora such as the UD treebanks contain tagging 
+errors and typos. A two step frequency filter minimizes the noise:
+  1) a word form must occur more than three times with a given lemma;
+  2) if a word form with a given lemma (rendered by `n_formlemma`) occurs in  
+  several different `upos` combinations (`n_uposlemma`), only combinations that 
+  represent more than 20% of `n_formlemma` remain listed. 
 
-## Universal Dependencies Treebanks
 
-Our package is __based on a large data frame__ called `multilingual_stoplist`, which has been extracted from the [Universal Dependencies treebanks](http://universaldependencies.org/) (henceforth UD). 
 
-UD is a framework for cross-linguistically consistent grammatical annotation that comprises lemmas and morphological categories of individual words, along with syntactic dependencies within each sentence. The corpora are either manually annotated from scratch or transformed from different annotation schemes and manually post-edited.
 
-The morphological information consists of three parts:
 
-- __Universal Part-of-Speech (POS) tag__;
-- __Universal Features__;
-- Tag from a language-specific tagset.
 
-While each language can have several language-specific tagsets, the two “universal” morphological categories are cross-linguistically consistent. The __Universal POS tags__ are very crude categories, such as `NOUN` or `VERB`. A number of more fine-grained morphological categories are stored in the __Universal Features__. These are for instance `Number`, `Animacy`, `Person`, and `Tense`. Each language uses a specific subset of the Universal Features (e.g. English does neither use `Animacy`, nor `Aspect`, while most Slavic languages use a range of cases but no articles). 
 
-For the `multilingual_stoplist` data frame, we have used the universal morphological annotation and lemmatization from the largest corpora to make sure that we would obtain all forms of closed-class words for the given language. That is why many UD-represented languages are missing in our `multilingual_stoplist`.
 
-
-
-
-## How the word classes are defined
-
-Most word classes in our package are defined exclusively by the Universal POS tag. Some, however, are defined as an intersection of a Universal POS and a Universal Feature (or of sets thereof). The definitions are cross-lingual and based on languages we are familiar with. Each language in the UD framework comes with a documentation that maps the language-specific grammar tradition on the UD markup. Should you be unhappy with our pre-defined word classes, we recommend referring directly to the UD documentation of your language and creating your own filter of the `multilingual_stoplist` data frame with a generic function.
-
-
-
-
-## Classes are not mutually exclusive
-
-Please bear in mind that the classes are not mutually exclusive with respect to homographs. If this might be a problem in your language and your application, double-check this. For instance, you may want to keep all demonstrative pronouns in English. Then you have a problem with *that*, which also appears as a subordinating conjunction (*that boy smiled* vs. *I know that it is true*). 
-
-
-
-
-
-# The functions and their arguments
-
-
-## The main function: `generate_stoplist()`
-
-The typical use case is removing all non-content words in one language; that is, closed-class words like prepositions, pronouns, or auxiliary verbs, as well as numerals, punctuation and symbols. When you only select your language, you will get a *character vector* of all its word forms that belong to these classes. 
-
-All this function needs to know to produce such a word list, is your language selection, and you do not need to override the default values of the other arguments. You can enter your language choice either as a full and capitalized language name into the `lang_name` argument, or as its iso code into the `lang_id` argument. Both arguments take a string or a vector of strings. 
-
-If you do not select any language by either argument, the function returns all word forms in all languages and you will get a warning. 
-
-```{r}
-set.seed(111)
-generate_stoplist() %>% sample(5)
-```
-
-Instead, you probably want to supply the function with a string or a character vector of language name(s) (`lang_name`) or language id(s) (`lang_id`) from the selection displayed by the functions `list_supported_language_names()` and `list_supported_language_ids()` described in the following sections. 
-
-
-```{r}
-set.seed(6)
-generate_stoplist(lang_name = "Spanish") %>% sample(5) 
-```
-
-```{r}
-set.seed(23)
-generate_stoplist(lang_name = c("Spanish", "German")) %>% sample(5)
-```
-
-If you combine both `lang_name` and `lang_id`, you will receive a warning.
-
-```{r}
-set.seed(26)
-generate_stoplist(lang_name = "Spanish", lang_id = "es") %>% sample(5)
-```
-
-
-```{r}
-set.seed(90)
-generate_stoplist(lang_name = c("French", "Hungarian"), 
-                  lang_id = c("sv", "hr")) %>% sample(20)
-```
-
-
-
-## `list_supported_language_names()`
-
-This function takes no arguments. It lists full names of the supported languages, capitalized. Use these language names when selecting your language(s).
-
-```{r}
-list_supported_language_names() %>% head(5)
-```
-
-
-
-
-## `list_supported_language_ids()`
-
-This function takes no arguments. It lists the ISO codes of the supported languages. If you do not like to use the full language names, use these when selecting your language(s). You can use both language names and language ids in the same search. 
-
-```{r}
-list_supported_language_ids() %>% head(5)
-```
-
-
-
-
-## `list_supported_pos`
-
-This function takes no arguments. It lists the Universal POS tags represented in `multilingual_stoplist`: 
-
-- `ADJ` = adjective;
-
-- `ADP` = adposition (preposition or postposition);
-
-- `ADV` = adverb;
-
-- `AUX` = auxiliary verb;
-
-- `CCONJ` = coordinating conjunction;
-
-- `DET` = determiner;
-
-- `INTJ` = interjection;
-
-- `NOUN` = noun;
-
-- `NUM` = numeral;
-
-- `PART` = particle; 
-
-- `PRON` = pronoun (careful here, our pronominals are defined across 
-several Universal POS!);
-
-- `PROPN` = proper noun;
-
-- `PUNCT` = punctuation;
-
-- `SCONJ` = subordinating conjunction;
-
-- `SYM` = symbol (esp. currencies, emojis, trade marks, and maths);
-
-- `VERB` =  verb.
-
-
-```{r}
-list_supported_pos()
-```
-
-
-# Getting more out of `generate_stoplist()`
-
-
-## Output as data frame
-
-Should you happen to have a UD-tagged text as input and want to discern between homographs, you might be interested in obtaining the tags along with the word forms of the stoplisted words. For this reason, we added the parameter `output_form`, which you can switch to `data.frame` from its default value `vector`. 
-
-```{r eval=FALSE}
-generate_stoplist(lang_name = "English", output_form = "data.frame") %>% slice(35) %>% glimpse()
-```
-
-
-## The `stop_lemmas` argument
-
-You can add your own character vector of lemmas. This will match your vector to  the lemma column of `multilingual_stoplist` and output all associated word forms within your language selection. 
-
-Please note that all words occurring in the output are words observed in the UD corpora. The UD corpora have no balanced-corpus policy, and even the larger ones do not cover the entire vocabulary. Use this argument with caution. 
-
-NB: this argument will not allow you to add lemmas that are not contained in  `multilingual_stoplist`. 
-
-```{r}
-generate_stoplist(stop_foreign_words = FALSE, 
-                  stop_abbreviations = FALSE,
-                  stop_pronominals = FALSE,
-                  stop_determiners_quantifiers = FALSE,
-                  stop_conjuctions = FALSE, 
-                  stop_adpositions = FALSE,
-                  stop_subordinating_conjunctions = FALSE,
-                  stop_auxiliary_verbs = FALSE,
-                  stop_interjections = FALSE,
-                  stop_particles = FALSE,
-                  stop_numerals = FALSE,
-                  stop_symbols_crosslingual = FALSE,
-                  stop_punctuation_crosslingual = FALSE,
-                  stop_lemmas = c("by"),
-                  output_form = "data.frame") %>% 
-  select(language_name, lemma, word_form) %>% distinct()
-```
-
-
-```{r}
-generate_stoplist(lang_name = c("English", "Slovak"),
-                  stop_foreign_words = FALSE, 
-                  stop_abbreviations = FALSE,
-                  stop_pronominals = FALSE,
-                  stop_determiners_quantifiers = FALSE,
-                  stop_conjuctions = FALSE, 
-                  stop_adpositions = FALSE,
-                  stop_subordinating_conjunctions = FALSE,
-                  stop_auxiliary_verbs = FALSE,
-                  stop_interjections = FALSE,
-                  stop_particles = FALSE,
-                  stop_numerals = FALSE,
-                  stop_symbols_crosslingual = FALSE,
-                  stop_punctuation_crosslingual = FALSE,
-                  stop_lemmas = c("on", "a"),
-                  output_form = "data.frame") %>% 
-  select(language_name, lemma, word_form) %>% 
-  apply(2,tolower) %>% as.data.frame() %>% distinct()
-```
-
-
-## The `stop_forms` argument
-
-You can add your own character vector of forms This will match your vector to the `word_form` column of `multilingual_stoplist` and output all matched word forms within your language selection.
-
-Please note that all words occurring in the output are words observed in the UD corpora. The UD corpora have no balanced-corpus policy, and not even the larger ones cover the entire vocabulary. The corpora for different languages are very diverse. Use this argument with caution. 
-
-NB: this argument will not allow you to add forms that are not contained in `multilingual_stoplist`. 
-
-```{r}
-generate_stoplist(lang_name = c("English", "Slovak"),
-                  stop_foreign_words = FALSE, 
-                  stop_abbreviations = FALSE,
-                  stop_pronominals = FALSE,
-                  stop_determiners_quantifiers = FALSE,
-                  stop_conjuctions = FALSE, 
-                  stop_adpositions = FALSE,
-                  stop_subordinating_conjunctions = FALSE,
-                  stop_auxiliary_verbs = FALSE,
-                  stop_interjections = FALSE,
-                  stop_particles = FALSE,
-                  stop_numerals = FALSE,
-                  stop_symbols_crosslingual = FALSE,
-                  stop_punctuation_crosslingual = FALSE,
-                  stop_forms = c("on", "a"),
-                  output_form = "data.frame") %>% 
-  select(language_name, lemma, word_form) %>% 
-  apply(2,tolower) %>% as.data.frame() %>% distinct()
-```
-
-
-## The `custom_filter` argument
-
-If you are comfortable with the main verbs of `dplyr`, you are better advised to search `multilingual_stoplist` with them. Also, to make more powerful queries, you will have to make yourself familiar with the UD documentation for your language(s) of interest, especially with regard to how the Universal Features are defined. This, more than the coarse-grained POS tags, depends on the grammatical traditions of the given language community. 
-
-The `custom_filter` argument allows you to incorporate a simple query without grouping. It has to be a character string in quotes. Mind to use a different type of quotes for variable values inside the query! 
-
-The most sensible use of this argument, especially when debugging your query, seems to be with all linguistic filters set to `FALSE`. Otherwise you will not be able to manually check the result of your query. 
-
-```{r eval=FALSE}
-generate_stoplist( stop_foreign_words = FALSE, stop_abbreviations = FALSE, stop_pronominals = FALSE, stop_determiners_quantifiers = FALSE, stop_conjuctions = FALSE, stop_adpositions = FALSE, stop_subordinating_conjunctions = FALSE, stop_auxiliary_verbs = FALSE, stop_interjections = FALSE, stop_particles = FALSE, stop_numerals = FALSE, stop_symbols_crosslingual = FALSE, stop_punctuation_crosslingual = FALSE, custom_filter = "POS == 'DET' & language_name == 'English'",output_form = "vector")
-```
-
-
-
-## Possible encoding issues 
-
-Encoding issues with non-Latin character sets  may arise when running this package or viewing this vignette on a Windows-operated PC with a Latin-alphabet locale. With a Latin-alphabet locale, we have observed that a non-Latin vector output displays correctly both in RMarkdown and in the console, while the same output displays as a set of Unicode codes when in the form of data frame. 
 
 
 
