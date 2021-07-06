@@ -18,7 +18,7 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 `list_supported_languages`.\n"}. 
 
 \item{output_form}{default \code{1}, alternatively \code{2} or \code{3}.}
-	Option \code{1} returns a character vector of alphabetically sorted unique stopwords word forms. 
+	Option \code{1} returns a character vector of unique stopwords word forms alphabetically sorted according to their associated stop classes. 
 	Option \code{2} returns a named vector whose elements are the stopwords word forms and names are the associated stop classes. One word form can occur with different stop classes; hence the word forms in this vector are not unique, unlike Option \code{1}. 
 	Option \code{3} returns a data frame filtered according to the language selection. 
 
@@ -99,6 +99,34 @@ Many languages are represented by balanced and large corpora of standard written
 }
 
 \examples{
-   
+#generate_stoplist(language = "English", output_form = 1) %>% sample(10) 
+# [1] "through" "'s"      "quite"   "not"     "m"       "you"     "until"   "many"    "with"    "were"  
+
+#> generate_stoplist(language = "English", output_form = 2) %>% sample(20)
+#          auxiliary_verb               adposition              contraction               pronominal 
+#                   "'re"                   "over"                     "im"                  "other" 
+#   determiner_quantifier               adposition conjunction_subordinator               pronominal 
+#                    "le"                "besides"               "although"                   "hers" 
+#              adposition               adposition               adposition               pronominal 
+#                  "into"                "without"                     "vs"                   "ones" 
+#          auxiliary_verb               adposition                 particle               pronominal 
+#                    "is"                     "re"                      "s"                   "whom" 
+#conjunction_subordinator               pronominal              contraction              contraction 
+#                "though"                    "she"                 "you’ve"                "they've" 
+#> 
+  
+#> generate_stoplist(language = "English", output_form = 3) %>% sample_n(10) %>% glimpse()
+#Rows: 10
+#Columns: 10
+#$ form            <chr> "which", "gon", "before", "ta", "whether", "had", "it", "didnt", "na", "'d"
+#$ lemma           <chr> "which", "go", "before", "to", "whether", "have", "it", "_", "to", "have"
+#$ stopclass       <chr> "pronominal", "abbreviation", "adposition", "particle", "conjunction_subordinato~
+#$ upos            <chr> "PRON", "VERB", "ADP", "PART", "SCONJ", "AUX", "PRON", "_", "PART", "AUX"
+#$ ufeat           <chr> "PronType=Int", "Abbr=Yes", "_", "Abbr=Yes", "_", "_", "_", "_", "Abbr=Yes", "_"
+#$ n_stopclasses   <int> 1, 1, 1, 2, 1, 1, 1, 1, 2, 1
+#$ n_formlemma     <dbl> 917, 7, 311, 7, 107, 730, 4050, 6, 21, 11
+#$ n_uposformlemma <dbl> 861, 7, 146, 7, 107, 730, 4050, 6, 21, 11
+#$ lang_id         <chr> "en", "en", "en", "en", "en", "en", "en", "en", "en", "en"
+#$ lang_name       <chr> "English", "English", "English", "English", "English", "English", "English", "En~  
 
 }
