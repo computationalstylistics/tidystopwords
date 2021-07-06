@@ -11,28 +11,32 @@ Multilingual stoplist
 This dataset contains a dataframe with individual word forms in rows. You can control the part of speech and various frequency counts of your desired stop-word list.
 }
 
-\usage{
-data("multilingual_stoplist")
-}
-
 \format{
-  A data frame with 213,526 observations on the following 10 variables, encoded in UTF-8.
-  \describe{
-    \item{\code{language_id}}{a character vector}
-    \item{\code{language_name}}{a character vector}
-    \item{\code{POS}}{a character vector}
-    \item{\code{UFeat}}{a character vector}
-    \item{\code{lemma}}{a character vector}
-    \item{\code{word_form}}{a character vector}
-    \item{\code{freq_formUFeatPOS}}{an integer vector}
-    \item{\code{freq_formPOS}}{an integer vector}
-    \item{\code{freq_form}}{an integer vector}
-    \item{\code{prop_wformpos_wform}}{an integer vector}
-  }
+  A data frame encoded in UTF-8, with the following columns:
+%\enumerate{
+%\item \code{form}: word forms in lower case. 
+%\item \code{lemma}: dictionary form of the word form in lower case.
+%\item \code{stopclass}: one of the following: 
+	- \code{abbreviation}: common abbreviations acting as adverbs or adjectives, for instance *e.g., etc., cf.*;  
+	- \code{adposition}: prepositions or postpositions (e.g. *in*, *ago*);
+	- \code{auxiliary_verb}: auxiliary or modal verb (e.g. *would*);
+	- \code{conjunction_subordinator}: coordinating or subordinating conjunctions(e.g. *and*, *because*);
+	- \code{contractions}: contracted forms (e.g. *'n'* or *she'd*);
+	- \code{determiner_quantifier}: pronouns, articles, pronominal adverbs, and some numerals not written as digits - all acting as adjectives or adverbs, not nouns (e.g. *yours*, *the*, *both* ,*where*, *twofold*. Cf. \code{pronominals}; 
+	- \code{interjection}: words denoting sounds and performative words like *yes*, *no*, *please*, *thanks*; 
+	\code{particle}: either preposition-like words in phrasal verbs (e.g. in English) or diverse words indicating the speaker's attitude to the statement (e.g. *fortunately*);
+	\code{pronominal}: pronouns acting as nouns (e.g. *we* - cf. \code{determiner_quantifier})
+%\item \code{upos}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
+%\item \code{ufeat}: Universal Features - here a selection of the original UD ufeat string containing complementary information to the universal part of speech tags, removing morphological categories that do not affect a word's eligibility for the stopword list (for instance case, gender, number, person, and tense). 
+%\item \code{n_stopclasses}: the number of stop classes to which the given combination of form and lemma belongs. If greater than 1, the given combination of form and lemma is grammatically homonymous. For instance, *that* can act as a noun (corresponding to \code{pronominal}), determiner/adjective (corresponding to \code{determiner_quantifier}), and subordinating conjunction (corresponding to \code{conjunction_subordinator}), and hence it appears in three stopclasses;  
+%item code{n_formlemma}: the frequency of the given combination of form and lemma across all UD treebanks currently available for the given language;
+%\item \code{n_uposformlemma}: the frequency of the given combination of upos, form, and lemma across all UD treebanks currently available for the given language;
+%\item \code{lang_id}: ISO-639 language code;
+%\item \code{lang_name}: language name (case-sensitive).
 }
 \details{
 This data frame has been derived from an official release of the Universal Dependencies (UD) treebanks. 
-Treebanks are text corpora with linguistic annotation. The UD syntactic annotation follows principles of dependency syntax.
+Treebanks are text corpora with linguistic annotation. The UD syntactic annotation follows the principles of dependency syntax.
 The annotation encompasses for each text token:
 \itemize{
 \item{relevant morphological categories};
@@ -40,63 +44,39 @@ The annotation encompasses for each text token:
 \item{a reference to its syntactically governing word in the clause; e.g. "house" governs "old" in "old house".}
 \item{the type of the syntactic dependency between the word and its governing word; e.g. "attribute".}
 }. 
-
-The morphological categories in UD are divided into two groups: the coarse-grained, cross-linguistically universal part-of-speech tags, and the Universal Features. 
-
-
-\code{language_id} - a mix of different versions of ISO-639 language codes as they were used in the source corpora;
-
-\code{language_name} - the English name of the language, starting with capital letter;
-
-\code{POS} - Universal part-of-speech tag;
-
-\code{UFeat} - Universal Features tags separated by \code{|}; this is more fine-grained information derived from the national morphological tagsets that is too specific to apply to all languages. However, even these tags are cross-linguistically coordinated to ensure maximum cross-linguistic uniformity in markup.   
-
-\code{lemma} - the basic (vocabulary) word form;
-
-\code{word_form};
-
-\code{freq_formUFeatPOS} - frequency of the given combination of word form, Universal Features and Universal Part of Speech. All frequencies are valid within the given language. Cross-lingual homonyms are kept separate (e.g. the preposition "in" existent in several Germanic languages is counted for each language separately, despite identical morphological markup) );
-
-\code{freq_formPOS} - frequency of the given combination of word form and Universal Part of Speech for the given language;
-
-\code{freq_form} - frequency of the given word form for the given language. (Mind that this number does not come from the addition of the former two!);
-
-\code{prop_wforpos_wform} - proportion of the given Universal Part of Speech in the given word form in the given language. This can be helpful when you decide whether to include a word in your list that is homonymous - considering the proportions gives you a hint on how much content you lose vs. how much noise you preserve. Remember to check the UD documentation of the individual corpora to assess whether their corpora are comparable to your texts, though!
 }
 \source{
-The data set is based on the official release of Version 2.1 of Universal Dependencies stored in the LINDAT/CLARIN digital library 
-at the Institute of Formal and Applied Linguistics (ÚFAL), Faculty of Mathematics and Physics, Charles University, Czech Republic, \url{http://hdl.handle.net/11234/1-2515}. 
+The data set is based on the official release of Version 2.8.1 of the Universal Dependencies stored in the LINDAT/CLARIN digital library 
+at the Institute of Formal and Applied Linguistics (ÚFAL), Faculty of Mathematics and Physics, Charles University, Czech Republic, \url{http://hdl.handle.net/11234/1-3687}. 
 }
 
 \references{
-To perform more sophisticated searches in this data frame, check the UD documentation. We have included all parts of speech except \code{X} (unknown POS). You can e.g. add to your stoplist all nouns above or below a given frequency threshold. 
+ 
 \url{http://universaldependencies.org}
 
-Nivre, Joakim; Agić, Željko; Ahrenberg, Lars; et al., 2017, 
-Universal Dependencies 2.1, LINDAT/CLARIN digital library 
-at the Institute of Formal and Applied Linguistics (ÚFAL), 
-Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.net/11234/1-2515}. 
+Zeman, Daniel; et al., 2021, 
+Universal Dependencies 2.8.1, LINDAT/CLARIAH-CZ digital library at the Institute of Formal and Applied Linguistics (UFAL), Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.net/11234/1-3687}.
+
 }
 
 \examples{
+
 data(multilingual_stoplist)
+glimpse(multilingual_stoplist)
 
-print(multilingual_stoplist)
-
-\dontrun{
-Observations: 213,526Variables: 10
-$ language_id         <chr> "af", "af", "af", "af", "af", "af", "af...
-$ language_name       <chr> "Afrikaans", "Afrikaans", "Afrikaans", ...
-$ POS                 <chr> "ADJ", "ADJ", "ADJ", "ADJ", "ADJ", "ADJ...
-$ UFeat               <chr> "AdjType=Attr|Case=Nom|Degree=Cmp", "Ad"..
-$ lemma               <chr> "goed", "addisioneel", "afloop", "agbaa...
-$ word_form           <chr> "beter", "addisionele", "afgelope", "ag...
-$ freq_formUFeatPOS   <int> 12, 19, 23, 12, 117, 11, 22, 13, 17, 11...
-$ freq_formPOS        <int> 13, 19, 23, 12, 117, 11, 22, 13, 21, 11...
-$ freq_form           <int> 13, 19, 23, 12, 117, 11, 22, 13, 21, 11...
-$ prop_wformpos_wform <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
-}
+# this gives you the following results:
+Rows: 38,820
+Columns: 10
+$ form            <chr> "'n", "aan", "aangesien", "af", "al", "alhoewel", "alle", "alles", "almal", "and~
+$ lemma           <chr> "'n", "aan", "aangesien", "af", "al", "alhoewel", "al", "alles", "almal", "ander~
+$ stopclass       <chr> "determiner_quantifier", "adposition", "conjunction_subordinator", "adposition",~
+$ upos            <chr> "DET", "ADP", "SCONJ", "ADP", "DET", "SCONJ", "DET", "PRON", "PRON", "PRON", "SC~
+$ ufeat           <chr> "PronType=Art", "_", "_", "_", "PronType=Ind", "_", "PronType=Ind", "PronType=In~
+$ n_stopclasses   <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,~
+$ n_formlemma     <dbl> 971, 295, 9, 10, 54, 8, 104, 13, 46, 13, 5, 260, 31, 40, 4, 29, 37, 7, 156, 77, ~
+$ n_uposformlemma <dbl> 971, 295, 9, 10, 54, 8, 104, 13, 46, 13, 5, 260, 31, 40, 4, 29, 37, 7, 156, 77, ~
+$ lang_id         <chr> "af", "af", "af", "af", "af", "af", "af", "af", "af", "af", "af", "af", "af", "a~
+$ lang_name       <chr> "Afrikaans", "Afrikaans", "Afrikaans", "Afrikaans", "Afrikaans", "Afrikaans", "A~
 
 }
 \keyword{datasets}

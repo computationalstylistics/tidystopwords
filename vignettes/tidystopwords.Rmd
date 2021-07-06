@@ -1,0 +1,121 @@
+---
+title: "Multilingual Stopwords"
+author:
+- Silvie Cinkova
+- Maciej Eder
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{stopwords}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# Functions and arguments
+The `tidystopwords` package gives you potential stopwords in more than 100 
+languages. Its main function is `generate_stoplist`. Its argument `language` 
+accepts atomic strings and character vectors of language names or language 
+abbreviations corresponding to those listed by the helping function 
+`list_supported_languages`.   
+
+The `list_supported_languages` function comes with three numbered output options. 
+
+-   Option `1` outputs a character vector of unique word forms.
+-   Option `2` outputs a named character vector of word forms. The names denote 
+`stop classes` roughly corresponding to parts of speech. Note that, in this 
+output, the word forms are not unique. For instance, in English stopwords, *that*
+would occur as a subordinating conjunction as well as as a pronoun.  
+- Option `3` (the default) outputs a data frame, where each row represents a combination 
+of language (columns `lang_name` and `lang_id`), word form and word lemma 
+(columns `form` and `lemma`), and several other columns explained below.    
+
+
+# Definition of stopwords
+The `list_supported_languages` output is based on `multilingual_stoplist` - a 
+data frame that was automatically extracted from the
+[Universal Dependencies treebanks](http://universaldependencies.org/) 
+(henceforth UD).  Universal Dependencies is a framework for cross-linguistically
+consistent grammatical annotation. The `tidystopwords` package uses their 
+lemmatization, *universal parts of speech*, and *universal features* to derive 
+an inventory of *stop classes*:
+
+- `abbreviation` (e.g. *e.g., cf., etc*);
+- `adposition` (preposition or postposition e.g. *in* and *ago*);
+- `auxiliary verb` (e.g. *been, have, must*);
+- `conjunction_subordinator` (e.g. *and*, *because*);
+- `contraction` (e.g. *'nt*);
+- `determiner_quantifier` (e.g. *third*, *which*, *both*);
+- `interjection` (e.g. *yes* );
+- `particle` (e.g. *off* in *take off* )
+- `pronominal` (functional words that act as nouns - e.g., *him*, *it*. Pronouns
+acting as adjectives (*your*) and pronominal adverbs (*where*) are covered by 
+the `determiner_quantifier` stop class.)
+
+
+In terms of the Universal Dependencies, the stop classes are defined as follows: 
+
+- `abbreviation`: `ufeat` contains `Abbr=Yes` and upos does not equal `NOUN` or 
+`ADJ`;
+- `adposition`: `upos` equals `AVP`;
+- `auxiliary verb`: `upos` equals `AUX`;
+- `conjunction_subordinator`: `upos` equals `CONJ` or `SCONJ`;
+- `contraction`: neither `form` nor `lemma` equal `_`, `upos` equals `_` and the 
+form has occurred more than twice in the corpus;
+- `determiner_quantifier`: either `upos` equals `DET` or `ufeat` contains 
+`PronType` and at least one of the following strings: `NumType`, 
+`Ind`, `Dem`, `Int`, `Rel`, `Tot`, `Neg`; 
+- `interjection`: `upos` equals `INTJ`;
+- `particle`: `upos` equals `PART`;
+- `pronominal`: `upos` equals `PRON` with no restrictions to `ufeat` or 
+`ufeat` contains `PronType` but then `upos` does not equal `DET`. 
+
+ 
+# Vocabulary coverage
+Each version of this package uses the latest UD release available to generate the
+`multilingual_stoplist` data frame. Therefore `multilingual_stoplist` can differ
+from version to version. Typically, a new UD release brings bigger annotated
+corpora and emerging corpora of new languages. 
+
+All stopword lists in `tidystopwords` have been generated automatically from the 
+data available at the moment. Hence their quality depends on the size of the 
+underlying corpora as well as the morphological richness of the given language. 
+
+To allow the user to assess the reliability of the stopword list for the given 
+language, the `multilingual_stoplist` contains relevant frequency information 
+for each word form in three columns: `n_formlemma`, `n_uposlemma`, and  
+`n_stopclasses`.
+
+The `n_formlemma` column gives the absolute frequency of the given word form with the 
+ given lemma. The `n_uposformlemma` column gives the absolute frequency of the 
+ given word form with the given lemma and upos.  
+
+The `n_stopclasses` column says in how many stop classes the given word form with
+the given lemma occurs. For instance *that* occurs as `determiner_quantifier`
+ (*that pie tastes good*), `pronominal` (*don't mention that*), and
+ `conjunction_subordinator` (*say that you will do it*). 
+
+
+# Noise control
+Even high-quality reference corpora such as the UD treebanks contain tagging 
+errors and typos. A two step frequency filter minimizes the noise:
+  1) a word form must occur more than three times with a given lemma;
+  2) if a word form with a given lemma (rendered by `n_formlemma`) occurs in  
+  several different `upos` combinations (`n_uposlemma`), only combinations that 
+  represent more than 20% of `n_formlemma` remain listed. 
+
+
+
+
+
+
+
+
+
+
+
+
+ 

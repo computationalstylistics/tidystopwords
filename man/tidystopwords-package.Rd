@@ -1,9 +1,10 @@
-\name{stopwoRds}
-\alias{stopwoRds-package}
-\alias{stopwoRds}
+\encoding{utf8}
+\name{tidystopwords}
+\alias{tidystopwords-package}
+\alias{tidystopwords}
 \docType{package}
 \title{
-A Selection of Stopwords in Different Languages
+Customisable Lists of Stopwords in 53 Languages
 }
 \description{
 The idea behind this package is to give the user control over the stop-word selection.
