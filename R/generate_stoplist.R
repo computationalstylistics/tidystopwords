@@ -4,7 +4,7 @@ library(dplyr)
 #library(magrittr)
 #library(purrr)
 
-generate_stoplist_df <- function(language = NULL, 
+generate_stoplist <- function(language = NULL, 
                               output_form = 1)
                               
                               {

@@ -14,7 +14,7 @@ generate_stoplist(language = NULL, output_form = 1)
 
 \arguments{
 \item{language}{single string or a character vector. \code{NULL} by default. 
-The strings can be language names or ISO-639 language codes as listed by the \code{list_supported_languages()}, freely combined. When no recognized language is recognized, this error message appears: \code{"The language name or language id you have selected is not supported. Check out the supported languages by calling 
+The strings can be language names or ISO-639 language codes as listed by the \code{list_supported_languages()}, freely combined, case-sensitive. When no recognized language is recognized, this error message appears: \code{"The language name or language id you have selected is not supported. Check out the supported languages by calling 
 `list_supported_languages`.\n"}. 
 
 \item{output_form}{default \code{1}, alternatively \code{2} or \code{3}.}
@@ -27,7 +27,7 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 %\details{
 %The underlying data frame has the following columns:
 %\enumerate{
-%\item \code{word_form}: word forms in lower case. 
+%\item \code{form}: word forms in lower case. 
 %\item \code{lemma}: dictionary form of the word form in lower case.
 %\item \code{stopclass}: one of the following: 
 	- \code{abbreviation}: common abbreviations acting as adverbs or adjectives, for instance *e.g., etc., cf.*;  
@@ -40,30 +40,44 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 	\code{particle}: either preposition-like words in phrasal verbs (e.g. in English) or diverse words indicating the speaker's attitude to the statement (e.g. *fortunately*);
 	\code{pronominal}: pronouns acting as nouns (e.g. *we* - cf. \code{determiner_quantifier})
 %\item \code{upos}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
-%\item \code{ufeat}: Universal Features - complementary information to the universal part of speech tags. The \code{multilingual_stoplist} data frame contains only a selection from the original ufeat string to abstract from morphological categories that do not affect whether or not a word is eligible for the stopword list (for instance case, gender, number, person, and tense). 
-%\item \code{n_stopclasses}: 
-%\item \code{lang_name}: language name
-%\item \code{freq_formPOS}: frequencies of each word form in a given language with a given POS tag across all corpora.
-%E.g. "her" as a personal pronoun (PRON) and "her" as a possessive pronoun (encoded under DET) would each have its own frequency.
-%\item \code{freq_formPOS}: frequencies of each word form in a given language across all corpora, no matter its POS tag. Here, the frequency of "her" would be the sum of its frequencies as a personal pronoun and as a possessive pronoun. 
+%\item \code{ufeat}: Universal Features - here a selection of the original UD ufeat string containing complementary information to the universal part of speech tags, removing morphological categories that do not affect a word's eligibility for the stopword list (for instance case, gender, number, person, and tense). 
+%\item \code{n_stopclasses}: the number of stop classes to which the given combination of form and lemma belongs. If greater than 1, the given combination of form and lemma is grammatically homonymous. For instance, *that* can act as a noun (corresponding to \code{pronominal}), determiner/adjective (corresponding to \code{determiner_quantifier}), and subordinating conjunction (corresponding to \code{conjunction_subordinator}), and hence it appears in three stopclasses;  
+%item code{n_formlemma}: the frequency of the given combination of form and lemma across all UD treebanks currently available for the given language;
+%\item \code{n_uposformlemma}: the frequency of the given combination of upos, form, and lemma across all UD treebanks currently available for the given language;
+%\item \code{lang_id}: ISO-639 language code;
+%\item \code{lang_name}: language name (case-sensitive).
+
+
 %}
 %}
 %}
 
 \value{
-A character vector, UTF-8 encoded.
+The function comes with three output options. 
+
+-   Option `1` outputs a character vector of unique word forms.
+-   Option `2` outputs a named character vector of word forms. The names denote 
+`stop classes` roughly corresponding to parts of speech. Note that, in this 
+output, the word forms are not unique. For instance, in English stopwords, *that*
+would occur as a subordinating conjunction as well as as a pronoun.  
+- Option `3` (the default) outputs a data frame, where each row represents a combination 
+of language (columns `lang_name` and `lang_id`), word form and word lemma 
+(columns `form` and `lemma`), and several other columns explained below.    
+
+All outputs are encoded in UT-8.
 }
 
 \references{
-The data set is based on the official release of Version 2.1 of Universal Dependencies.
+The underlying data frame `multilingual_stoplist` is based on the official release of Version 2.8 of Universal Dependencies.
 
 \url{http://universaldependencies.org}
 
-Nivre, Joakim; Agić, Željko; Ahrenberg, Lars; et al., 2017, 
-Universal Dependencies 2.1, LINDAT/CLARIN digital library 
-at the Institute of Formal and Applied Linguistics (ÚFAL), 
-Faculty of Mathematics and Physics, Charles University, \url{http://hdl.handle.net/11234/1-2515}.  
+Zeman, Daniel; et al., 2021, 
+Universal Dependencies 2.8.1, LINDAT/CLARIAH-CZ digital library at the Institute of Formal and Applied Linguistics (ÚFAL), Faculty of Mathematics and Physics, Charles University, http://hdl.handle.net/11234/1-3687.
+
 }
+
+
 
 \author{
 Silvie Cinková, Maciej Eder
@@ -72,41 +86,19 @@ Silvie Cinková, Maciej Eder
 
 \section{Warning}{
 \itemize{
-\item{The function stops when both \code{lang_name} and \code{lang_id} equal \code{NULL}. Setting a language in the custom filter does not do.}
-\item{The function stops when \code{lang_name} or \code{lang_id} contains an unsupported item. Mind that the selection is case-sensitive. The error message prints the culprit(s). If you have set both \code{lang_name} or \code{lang_id} and the check finds an error in the former, it will not go on checking the latter. }
-\item{The languages supported by the first version of this package are listed as argument default, but the actual 
-language inventory relies on the underlying data frame. The initial checks call \code{list_supported_language_names()} and \code{list_supported_language_ids()}.}
-\item{The pre-defined linguistic filters are not mutually exclusive. Their overlap varies among languages.}
-\item{You will see a warning message when you set both \code{lang_name} and \code{lang_id}, no matter whether they represent the same language or different languages.}
-\item{When you run the function with default argument values, you will get stopwords from all supported languages mixed up and see a warning about that.}
-\item{The stoplists are fully data-driven. We have set a threshold of 10 occurrences of a combination of language, word form, lemma, POS and the Universal Features to remove obvious noise, but some noise is bound to have come through anyway. It is mainly foreign words that were given a regular POS tag (cf. the example code snippets below: the English "and" has sneaked in among the German coordinating conjunctions). 
-Many languages are represented by balanced and large corpora of standard written texts, but some are not; e.g. based mainly on a Bible translation. Hence also their stopwords can be biased. }
+\item{The function stops when no language is selected.}
+\item{The stop classes (pre-defined linguistic filters) are not mutually exclusive. Their overlap varies among languages.}
+\item{The stoplists are fully data-driven. We have set a threshold of 3 occurrences of a combination of language, form, lemma, and upos to remove obvious noise, but some noise is bound to have come through anyway. It is mainly foreign words that were given a regular upos tag (e.g. the English "and" has sneaked in among the German coordinating conjunctions). Another known case is the \code{contraction} stop class in English, which, among well-suited instances such as *ain't* includes uses of the so-called Saxonic genitive (e.g. *world's*).  
+Many languages are represented by balanced and large corpora of standard written texts, but some are not; e.g. based mainly on a Bible translation or Wikipedia. Hence also their stopwords can be biased. }
 }
 }
 
 
 \seealso{
-\code{\link{list_supported_language_names}}, \code{\link{list_supported_language_ids}}, \code{\link{list_supported_pos}}, \code{\link{multilingual_stoplist}}
+\code{\link{list_supported_languages_names}}, \code{\link{multilingual_stoplist}}
 }
 
 \examples{
-    # standard usage (might return some non-ASCII characters):
-    generate_stoplist(lang_name = "English")
-    
-    # to get only conjunctions (11 items):
-    generate_stoplist(lang_name = "English", 
-                          stop_foreign_words = FALSE, 
-                          stop_abbreviations = FALSE,
-                          stop_pronominals = FALSE,
-                          stop_determiners_quantifiers = FALSE,
-                          stop_conjuctions = TRUE, 
-                          stop_adpositions = FALSE,
-                          stop_subordinating_conjunctions = FALSE,
-                          stop_auxiliary_verbs = FALSE,
-                          stop_interjections = FALSE,
-                          stop_particles = FALSE,
-                          stop_numerals = FALSE,
-                          stop_symbols_crosslingual = FALSE,
-                          stop_punctuation_crosslingual = FALSE)
+   
 
 }
