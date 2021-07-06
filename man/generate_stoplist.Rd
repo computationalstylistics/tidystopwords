@@ -3,12 +3,10 @@
 \alias{generate_stoplist}
 
 \title{
-Listing of stop words with control over language and part of speech.
+Listing of stop words in different languages.
 }
 \description{
-Generate a vector of stop words in one or several languages. Parameters allow you 
-to toggle different parts of speech as well as to add new words.
-
+Generate a vector of stop words in one or several languages. 
 }
 \usage{
 generate_stoplist(language = NULL, output_form = 1)
@@ -30,11 +28,21 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 %The underlying data frame has the following columns:
 %\enumerate{
 %\item \code{word_form}: word forms in lower case. 
-%\item \code{lemma}
-%\item  \code{lemma}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
-%\item \code{UFeat}: Universal Features - complementary information to the universal part of speech tags. 
-%\item \code{refcorpus} column contains the corpus ID. We have tried to gather as large a data set for each language as possible, so we combined corpora across several releases of Universal dependencies. For instance the Latin stopwords come from three different corpora: ud_la_, ud_la_itt_, and ud_la_proiel_.   
-%\item \code{language}: language ids.
+%\item \code{lemma}: dictionary form of the word form in lower case.
+%\item \code{stopclass}: one of the following: 
+	- \code{abbreviation}: common abbreviations acting as adverbs or adjectives, for instance *e.g., etc., cf.*;  
+	- \code{adposition}: prepositions or postpositions (e.g. *in*, *ago*);
+	- \code{auxiliary_verb}: auxiliary or modal verb (e.g. *would*);
+	- \code{conjunction_subordinator}: coordinating or subordinating conjunctions(e.g. *and*, *because*);
+	- \code{contractions}: contracted forms (e.g. *'n'* or *she'd*);
+	- \code{determiner_quantifier}: pronouns, articles, pronominal adverbs, and some numerals not written as digits - all acting as adjectives or adverbs, not nouns (e.g. *yours*, *the*, *both* ,*where*, *twofold*. Cf. \code{pronominals}; 
+	- \code{interjection}: words denoting sounds and performative words like *yes*, *no*, *please*, *thanks*; 
+	\code{particle}: either preposition-like words in phrasal verbs (e.g. in English) or diverse words indicating the speaker's attitude to the statement (e.g. *fortunately*);
+	\code{pronominal}: pronouns acting as nouns (e.g. *we* - cf. \code{determiner_quantifier})
+%\item \code{upos}: Universal part of speech of the given word form. Cf. documentation of Universal Dependencies.
+%\item \code{ufeat}: Universal Features - complementary information to the universal part of speech tags. The \code{multilingual_stoplist} data frame contains only a selection from the original ufeat string to abstract from morphological categories that do not affect whether or not a word is eligible for the stopword list (for instance case, gender, number, person, and tense). 
+%\item \code{n_stopclasses}: 
+%\item \code{lang_name}: language name
 %\item \code{freq_formPOS}: frequencies of each word form in a given language with a given POS tag across all corpora.
 %E.g. "her" as a personal pronoun (PRON) and "her" as a possessive pronoun (encoded under DET) would each have its own frequency.
 %\item \code{freq_formPOS}: frequencies of each word form in a given language across all corpora, no matter its POS tag. Here, the frequency of "her" would be the sum of its frequencies as a personal pronoun and as a possessive pronoun. 
