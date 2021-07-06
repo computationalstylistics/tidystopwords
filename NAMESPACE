@@ -5,7 +5,5 @@ importFrom(utils, data)
 
 export(
   generate_stoplist,
-  list_supported_pos,
-  list_supported_language_ids,
-  list_supported_language_names
+  list_supported_languages
 )

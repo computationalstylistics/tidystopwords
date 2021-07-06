@@ -18,7 +18,7 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 `list_supported_languages`.\n"}. 
 
 \item{output_form}{default \code{1}, alternatively \code{2} or \code{3}.}
-	Option \code{1} returns a character vector of unique stopwords word forms alphabetically sorted according to their associated stop classes. 
+	Option \code{1} returns a character vector of unique stopwords word forms. 
 	Option \code{2} returns a named vector whose elements are the stopwords word forms and names are the associated stop classes. One word form can occur with different stop classes; hence the word forms in this vector are not unique, unlike Option \code{1}. 
 	Option \code{3} returns a data frame filtered according to the language selection. 
 
@@ -27,8 +27,8 @@ The strings can be language names or ISO-639 language codes as listed by the \co
 %\details{
 %The underlying data frame has the following columns:
 %\enumerate{
-%\item \code{form}: word forms in lower case. 
-%\item \code{lemma}: dictionary form of the word form in lower case.
+%\item \code{form}: word forms in the lower case. 
+%\item \code{lemma}: dictionary form of the word form in the lower case.
 %\item \code{stopclass}: one of the following: 
 	- \code{abbreviation}: common abbreviations acting as adverbs or adjectives, for instance *e.g., etc., cf.*;  
 	- \code{adposition}: prepositions or postpositions (e.g. *in*, *ago*);
@@ -64,7 +64,7 @@ would occur as a subordinating conjunction as well as as a pronoun.
 of language (columns `lang_name` and `lang_id`), word form and word lemma 
 (columns `form` and `lemma`), and several other columns explained below.    
 
-All outputs are encoded in UT-8.
+All outputs are encoded in UTF-8.
 }
 
 \references{
@@ -95,7 +95,7 @@ Many languages are represented by balanced and large corpora of standard written
 
 
 \seealso{
-\code{\link{list_supported_languages_names}}, \code{\link{multilingual_stoplist}}
+\code{\link{list_supported_languages}}, \code{\link{multilingual_stoplist}}
 }
 
 \examples{
