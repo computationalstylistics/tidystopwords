@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Distributional Semantics: (1) Topic Modeling"
 author: Maciej Eder
-date: 14.09.2019
+date: 27.07.2021
 output: 
   rmdshower::shower_presentation:
     self_contained: false
@@ -43,7 +43,7 @@ Maciej Eder
 Institute of Polish Language (Polish Academy of Sciences)
 </p>
 <p class="black">
-IQLA-GIAT Summer School, Padova, 14.09.2019
+IQLA-GIAT Summer School, Padova, 27.07.2021
 </p>
 
 
