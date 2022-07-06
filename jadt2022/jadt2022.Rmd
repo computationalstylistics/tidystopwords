@@ -1,0 +1,449 @@
+---
+title: "Improving </br> the performance"
+subtitle: "of word frequencies </br> in authorship attribution"
+author: Maciej Eder (<a>maciej.eder@ijp.pan.pl</a>)
+date: 6.07.2022 
+      </br></br></br> JADT2022 conference </br>
+      Napoli, 6–8.07.2022
+output:
+  revealjs::revealjs_presentation:
+    transition: fade
+    highlight: espresso
+    self_contained: true 
+    css: ijppan_rmarkdown.css
+---
+
+
+
+```{r setup, include=FALSE}
+# set global chunk options
+
+library(knitr)
+library(plotly)
+library(lattice)
+library(viridisLite)
+
+library(stylo)
+data(novels)
+corpus = parse.corpus(novels)
+freqs = lapply(corpus, table)
+
+
+load("data/results_wurzburg.RData")
+load("data/results_baseline_wurzburg.RData")
+performance_wurzburg = collect_results_all_similarity_areas 
+# define the gain of performance as a difference between the final results and the baseline (both expressed in f1 scores)
+performance_gain_wurzburg = performance_wurzburg - collect_baseline_results
+# get rid of the values that are worse than the baseline
+performance_gain_wurzburg[performance_gain_wurzburg <= 0] = NA
+
+load("data/results_delta.RData")
+load("data/results_baseline_delta.RData")
+performance_delta = collect_results_all_similarity_areas 
+# define the gain of performance as a difference between the final results and the baseline (both expressed in f1 scores)
+performance_gain_delta = performance_delta -  collect_baseline_results
+# get rid of the values that are worse than the baseline
+performance_gain_delta[performance_gain_delta <= 0] = NA
+
+
+
+
+
+
+
+opts_chunk$set(cache=TRUE)
+```
+
+
+## introduction { .ijppan_section }
+
+
+
+## stylometry
+
+* measures stylistic differences between texts
+* oftentimes aimed at authorship attribution
+* relies on _stylistic fingerprint_, ...
+* ... aka measurable linguistic features
+  * frequencies of function words 
+  * frequencies of grammatical patterns, etc.
+* proves successful in several applications
+
+
+
+## areas of improvement
+
+* classification method
+  * distant-based
+  * svm, nsc, knn, ...
+  * neural networs
+  * ...
+* feature engineering
+  * dimension reduction
+  * lasso
+  * ...
+* feature choice 
+  * MFWs
+  * POS _n_-grams
+  * character _n_-grams
+  * ... 
+
+
+
+
+## relative frequencies { .ijppan_section }
+
+
+
+
+## simple normalization
+
+Occurrences of the most frequent words (MFWs): 
+
+``` {r echo = FALSE, message = TRUE}
+freqs$EBronte_Wuthering[make.frequency.list(corpus)[1:16]]
+```
+
+Relative frequencies:
+
+``` {r echo = FALSE, message = TRUE}
+rel_freqs = freqs$EBronte_Wuthering[make.frequency.list(corpus)[1:11]] / sum(freqs$EBronte_Wuthering)
+round(rel_freqs, 4)
+```
+
+
+
+
+
+## relative frequencies
+
+The number of occurrences of a given word divided by the total number of words:
+
+$$ f_\mathrm{the} = \frac{n_\mathrm{the}}{ n_\mathrm{the} +  n_\mathrm{of} + n_\mathrm{and} + n_\mathrm{in} + ... } $$
+
+In a generalized version:
+
+$$ f_{w} = \frac{n_{w}}{N} $$
+
+
+
+
+## relative frequencies
+
+* routinely used
+* reliable
+* simple
+* intuitive
+* conceptually elegant
+
+
+
+
+
+
+
+## words that matter { .ijppan_section }
+
+
+
+## synonyms
+
+Proportions within synonym groups might betray a stylistic signal:
+
+* _on_ and _upon_
+* _drink_ and _beverage_
+* _buy_ and _purchase_
+* _big_ and _large_
+* _et_ and _atque_ and _ac_
+
+$$ f_\mathrm{on} = \frac{n_\mathrm{on}}{ n_\mathrm{on} +  n_\mathrm{upon} } $$
+
+$$ f_\mathrm{upon} = \frac{n_\mathrm{upon}}{ n_\mathrm{on} +  n_\mathrm{upon} } $$
+
+
+## limitations of synonyms
+
+
+
+
+
+
+
+## 'on'/total vs. 'on'/('upon' + 'on') 
+
+``` {r echo = FALSE, message = FALSE}
+
+color_space = viridis(4)
+text_colors = c(color_space[1], color_space[1], color_space[2], color_space[2], color_space[2], color_space[3], color_space[3], color_space[3], color_space[4])
+
+plot_freqs = function(x, ...) {
+  plot(x, type = "h", col = text_colors, lwd = 10, xlab = "", axes = FALSE, ...)
+  axis(2)
+  legend("topleft", legend = c("A. Bronte", "J. Austen", "C. Bronte", "E. Bronte"), bty = "n", lwd = 10, col = color_space)
+}
+
+on_ = lapply(freqs, function(x) x[grep("\\bon\\b", names(x))] )
+upon_ = lapply(freqs, function(x) x[grep("\\bupon\\b", names(x))] )
+
+total = lapply(freqs, sum)
+
+op = par(mfrow = c(1, 2))
+#plot_freqs( unlist(on_) / unlist(total), ylim = c(0, 0.008) )
+plot_freqs( unlist(on_) / unlist(total), ylab = "relative frequency")
+plot_freqs( unlist(on_) / (unlist(on_) + unlist(upon_)) , ylab = "")
+
+```
+
+
+## 'the'/total vs. 'the'/('of' + 'the')
+
+``` {r echo = FALSE, message = FALSE}
+the_ = lapply(freqs, function(x) x[grep("\\bthe\\b", names(x))] )
+of_ = lapply(freqs, function(x) x[grep("\\bof\\b", names(x))] )
+
+total = lapply(freqs, sum)
+
+op = par(mfrow = c(1, 2))
+plot_freqs( unlist(the_) / unlist(total), ylab = "relative frequency")
+plot_freqs( unlist(the_) / (unlist(of_) + unlist(the_)), ylab = "" )
+
+```
+
+
+``` {r eval = FALSE, echo = FALSE, message = FALSE}
+
+the_ = lapply(freqs, function(x) x[grep("\\bthe\\b", names(x))] )
+and_ = lapply(freqs, function(x) x[grep("\\band\\b", names(x))] )
+to_ = lapply(freqs, function(x) x[grep("\\bto\\b", names(x))] )
+i_ = lapply(freqs, function(x) x[grep("\\bi\\b", names(x))] )
+of_ = lapply(freqs, function(x) x[grep("\\bof\\b", names(x))] )
+a_ = lapply(freqs, function(x) x[grep("\\ba\\b", names(x))] )
+in_ = lapply(freqs, function(x) x[grep("\\bin\\b", names(x))] )
+was_ = lapply(freqs, function(x) x[grep("\\bwas\\b", names(x))] )
+her_ = lapply(freqs, function(x) x[grep("\\bher\\b", names(x))] )
+it_ = lapply(freqs, function(x) x[grep("\\bit\\b", names(x))] )
+
+total = lapply(freqs, sum)
+
+op = par(mfrow = c(1, 2))
+plot_freqs( unlist(the_) / unlist(total) )
+plot_freqs( unlist(the_) /
+(unlist(the_) + unlist(and_) + unlist(to_) + unlist(i_) + unlist(of_) + unlist(a_) + unlist(in_) + unlist(was_) + unlist(her_) + unlist(it_)) )
+
+```
+
+
+
+
+## beyond synonyms { .ijppan_section }
+
+
+
+## semantic similarity
+
+
+
+## word vector models
+
+
+
+##
+
+``` {r echo = FALSE, message = FALSE}
+plot_data = performance_wurzburg 
+p <- plot_ly(y = as.numeric(rownames(plot_data)), z = performance_wurzburg, type = "surface", colors = rev(turbo(1000)))
+p %>% layout(scene = list(
+    xaxis = list(
+      ticktext = list(1, 10, 100, 1000, 10000), 
+      tickvals = list(1, 10, 19, 28, 37),
+      tickmode = "array"
+  )))
+
+```
+
+
+
+## results for Cosine Delta
+
+``` {r echo = FALSE, message = FALSE}
+# setting the scales
+x.scale <- list(at = c(1, 5, 10, 14, 19, 23, 28, 32, 36), label = c(1, 5, 10, 50, 100, 500, 1000, 5000, 10000))
+y.scale <- list(at = c(1, 4, 7, 10, 13, 16, 19), labels = seq(100, 1000, 150))
+# absolute values
+plot_1 = levelplot(t(performance_wurzburg), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000)), xlab= "semantic background (words)", ylab = "number of MFWs")
+# gain over the baseline
+plot_1
+
+# keep the performance outcomes for later
+f1_all_wurzburg = sort(as.vector(performance_wurzburg))
+f1_gain_wurzburg = sort(as.vector(performance_gain_wurzburg))
+```
+
+
+
+## results for Burrows's Delta
+
+``` {r echo = FALSE, message = FALSE}
+# setting the scales
+x.scale <- list(at = c(1, 5, 10, 14, 19, 23, 28, 32, 36), label = c(1, 5, 10, 50, 100, 500, 1000, 5000, 10000))
+y.scale <- list(at = c(1, 4, 7, 10, 13, 16, 19), labels = seq(100, 1000, 150))
+# absolute values
+plot_1 = levelplot(t(performance_delta), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000)), xlab= "semantic background (words)", ylab = "number of MFWs")
+# gain over the baseline
+plot_1
+
+# keep the performance outcomes for later
+f1_all_delta = sort(as.vector(performance_delta))
+f1_gain_delta = sort(as.vector(performance_gain_delta))
+```
+
+
+
+
+## results for Eder's Delta
+
+``` {r echo = FALSE, message = FALSE}
+load("data/results_eder.RData")
+load("data/results_baseline_eder.RData")
+
+# define the gain of performance as a difference between the final results and the baseline (both expressed in f1 scores)
+performance_gain_eder = collect_results_all_similarity_areas - collect_baseline_results
+# get rid of the values that are worse than the baseline
+performance_gain_eder[performance_gain_eder <= 0] = NA
+
+# setting the scales
+x.scale <- list(at = c(1, 5, 10, 14, 19, 23, 28, 32, 36), label = c(1, 5, 10, 50, 100, 500, 1000, 5000, 10000))
+y.scale <- list(at = c(1, 4, 7, 10, 13, 16, 19), labels = seq(100, 1000, 150))
+# absolute values
+plot_1 = levelplot(t(collect_results_all_similarity_areas), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000)), xlab= "semantic background (words)", ylab = "number of MFWs")
+# gain over the baseline
+plot_1
+
+# keep the performance outcomes for later
+f1_all_eder = sort(as.vector(collect_results_all_similarity_areas))
+f1_gain_eder= sort(as.vector(performance_gain_eder))
+```
+
+
+
+## results for Manhattan Distance 
+
+``` {r echo = FALSE, message = FALSE}
+load("data/results_manhattan.RData")
+load("data/results_baseline_manhattan.RData")
+
+# define the gain of performance as a difference between the final results and the baseline (both expressed in f1 scores)
+performance_gain_manhattan = collect_results_all_similarity_areas - collect_baseline_results
+# get rid of the values that are worse than the baseline
+performance_gain_manhattan[performance_gain_manhattan <= 0] = NA
+
+# setting the scales
+x.scale <- list(at = c(1, 5, 10, 14, 19, 23, 28, 32, 36), label = c(1, 5, 10, 50, 100, 500, 1000, 5000, 10000))
+y.scale <- list(at = c(1, 4, 7, 10, 13, 16, 19), labels = seq(100, 1000, 150))
+# absolute values
+plot_1 = levelplot(t(collect_results_all_similarity_areas), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000)), xlab= "semantic background (words)", ylab = "number of MFWs")
+# gain over the baseline
+plot_1
+
+# keep the performance outcomes for later
+f1_all_manhattan = sort(as.vector(collect_results_all_similarity_areas))
+f1_gain_manhattan = sort(as.vector(performance_gain_manhattan))
+
+```
+
+
+##
+
+``` {r echo = FALSE, message = FALSE}
+#
+plot(f1_all_wurzburg, col = 1, type = "l")
+lines(f1_all_delta, col = 2)
+lines(f1_all_eder, col = 3)
+```
+
+
+
+##
+
+``` {r echo = FALSE, message = FALSE}
+#
+plot(f1_gain_wurzburg, col = 1, type = "l", ylim = c(0,0.12))
+lines(f1_gain_delta, col = 2)
+lines(f1_gain_eder, col = 3)
+lines(f1_gain_manhattan, col = 4)
+```
+
+
+
+## gain for Cosine Delta
+
+``` {r echo = FALSE, message = FALSE}
+# gain over the baseline
+plot_2 = levelplot(t(performance_gain_wurzburg), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000, end = 0.6)), xlab= "semantic background (words)", ylab = "MFWs")
+plot_2
+```
+
+
+
+## gain for Burrows's Delta
+
+``` {r echo = FALSE, message = FALSE}
+# gain over the baseline
+plot_2 = levelplot(t(performance_gain_delta), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000, end = 0.6)), xlab= "semantic background (words)", ylab = "MFWs")
+plot_2
+```
+
+
+
+
+## gain for Eder's Delta
+
+``` {r echo = FALSE, message = FALSE}
+# gain over the baseline
+plot_2 = levelplot(t(performance_gain_eder), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000, end = 0.6)), xlab= "semantic background (words)", ylab = "MFWs")
+plot_2
+```
+
+
+
+## gain for Manhattan Distance 
+
+``` {r echo = FALSE, message = FALSE}
+# gain over the baseline
+plot_2 = levelplot(t(performance_gain_manhattan), cuts = 1000, scales = list(x = x.scale, y = y.scale), col.regions = rev(turbo(1000, end = 0.6)), xlab= "semantic background (words)", ylab = "MFWs")
+plot_2
+```
+
+
+
+## the template
+
+This presentation introduces a template for the project CLS INFRA and the `reveal.js` framework, but it is meant to be used within the R programming environment with the package `rmarkdown` active. The template is based on Ingo Börner's previous work, except that the original template is meant to be used with a low-level installation of `reveal.js`.
+
+
+
+
+
+
+## conclusion { .cls_section }
+
+
+
+
+## work in progress
+
+* the template works just fine in most contexts...
+* ... but it still needs some tweaks
+* e.g. the next slide still doesn't hide the project's logo in the corner
+* therefore, please expect updates in the future
+
+
+
+## { .no-background }
+
+<!--
+![](https://clsinfra.io/wp-content/uploads/2021/09/CLS-INFRA_Linear-Long-Logo-Rev-Col.png)
+-->
+
+
+
