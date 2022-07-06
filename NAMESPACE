@@ -1,0 +1,10 @@
+
+import(dplyr)
+
+importFrom(utils, data)
+
+export(
+  generate_stoplist,
+  list_supported_languages
+)
+
