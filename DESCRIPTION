@@ -12,5 +12,7 @@ Imports: dplyr
 Description: Functions to generate stop-word lists in 110 languages, in a way consistent across all the languages supported. The generated lists are based on the morphological tagset from the Universal Dependencies.
 License: GPL (>= 3)
 Encoding: UTF-8
+URL: https://github.com/computationalstylistics/tidystopwords
+BugReports: https://github.com/computationalstylistics/tidystopwords/issues
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
